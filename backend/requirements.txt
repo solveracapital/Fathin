@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+numpy
+scipy
+pandas
+scikit-learn
+openpyxl
+python-docx
+pypdf
+httpx
+pytest
+reportlab
+plotly
+kaleido

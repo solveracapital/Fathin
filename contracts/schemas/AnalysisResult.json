@@ -1,0 +1,342 @@
+{
+  "$defs": {
+    "Metric": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        },
+        "unit": {
+          "enum": [
+            "count",
+            "ratio",
+            "percent",
+            "score",
+            "none"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "subset_id": {
+          "title": "Subset Id",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ok",
+            "undefined",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Reason"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value",
+        "unit",
+        "subset_id",
+        "status",
+        "reason",
+        "evidence_ids"
+      ],
+      "title": "Metric",
+      "type": "object"
+    },
+    "Reason": {
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "Reason",
+      "type": "object"
+    },
+    "Visual": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "bar",
+            "histogram",
+            "boxplot",
+            "heatmap",
+            "line",
+            "scatter",
+            "biplot",
+            "scree",
+            "dendrogram",
+            "confusion_matrix",
+            "roc",
+            "precision_recall",
+            "silhouette",
+            "contribution"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "title": "Purpose",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "shown",
+            "available",
+            "omitted",
+            "unavailable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason_code": {
+          "title": "Reason Code",
+          "type": "string"
+        },
+        "reason_text": {
+          "title": "Reason Text",
+          "type": "string"
+        },
+        "data_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Data Ref"
+        },
+        "subset_id": {
+          "title": "Subset Id",
+          "type": "string"
+        },
+        "axes": {
+          "additionalProperties": true,
+          "title": "Axes",
+          "type": "object"
+        },
+        "series": {
+          "items": {},
+          "title": "Series",
+          "type": "array"
+        },
+        "encodings": {
+          "additionalProperties": true,
+          "title": "Encodings",
+          "type": "object"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "projection": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Projection"
+        },
+        "sampling": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Sampling"
+        },
+        "default_order": {
+          "title": "Default Order",
+          "type": "integer"
+        },
+        "table_alternative_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Table Alternative Ref"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "purpose",
+        "status",
+        "reason_code",
+        "reason_text",
+        "data_ref",
+        "subset_id",
+        "axes",
+        "series",
+        "encodings",
+        "evidence_ids",
+        "projection",
+        "sampling",
+        "default_order",
+        "table_alternative_ref"
+      ],
+      "title": "Visual",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "method": {
+      "enum": [
+        "lda",
+        "pca",
+        "efa",
+        "kmeans",
+        "hierarchical"
+      ],
+      "title": "Method",
+      "type": "string"
+    },
+    "subset_definitions": {
+      "additionalProperties": true,
+      "title": "Subset Definitions",
+      "type": "object"
+    },
+    "metrics": {
+      "items": {
+        "$ref": "#/$defs/Metric"
+      },
+      "title": "Metrics",
+      "type": "array"
+    },
+    "table_index": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Table Index",
+      "type": "array"
+    },
+    "formula_index": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Formula Index",
+      "type": "array"
+    },
+    "diagnostics": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Diagnostics",
+      "type": "array"
+    },
+    "narrative_blocks": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Narrative Blocks",
+      "type": "array"
+    },
+    "visual_manifest": {
+      "items": {
+        "$ref": "#/$defs/Visual"
+      },
+      "title": "Visual Manifest",
+      "type": "array"
+    },
+    "provenance": {
+      "additionalProperties": true,
+      "title": "Provenance",
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "method",
+    "subset_definitions",
+    "metrics",
+    "table_index",
+    "formula_index",
+    "diagnostics",
+    "narrative_blocks",
+    "visual_manifest",
+    "provenance"
+  ],
+  "title": "AnalysisResult",
+  "type": "object"
+}

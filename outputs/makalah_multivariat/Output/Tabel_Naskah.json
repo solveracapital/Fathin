@@ -1,0 +1,935 @@
+{
+  "TABLE_METODE": {
+    "title": "Tabel 2.1 Perbandingan empat metode",
+    "headers": [
+      "Metode dan tujuan",
+      "Data dan label",
+      "Keluaran dan kondisi",
+      "Keputusan dan contoh aktuaria"
+    ],
+    "rows": [
+      [
+        "PCA; merangkum variasi",
+        "Numerik; tanpa label",
+        "Skor, arah, PVE; sensitif skala/pencilan",
+        "Basis S/R dan dimensi; ringkasan paparan. PVE bukan akurasi."
+      ],
+      [
+        "EFA; konstruk laten",
+        "Indikator reflektif; tanpa target kelas",
+        "Loading, komunalitas, faktor; model pengukuran",
+        "Ekstraksi/rotasi; survei persepsi risiko. Faktor bukan komponen."
+      ],
+      [
+        "Gerombol; mencari profil",
+        "Fitur dan jarak sesuai tipe; tanpa label",
+        "Keanggotaan/pusat/dendrogram; sensitif fitur",
+        "Jarak/K/stabilitas; profil penerbit. Kelompok bukan kelas resmi."
+      ],
+      [
+        "LDA; membedakan kelas",
+        "Fitur numerik; label train diketahui",
+        "Fungsi, centroid, posterior; kovarians bersama",
+        "Prior/ambang/validasi; penyaringan kredit. Bukan efek kausal."
+      ]
+    ],
+    "source": "Sumber: sintesis Jolliffe dan Cadima (2016), Costello dan Osborne (2005), Murtagh dan Legendre (2011), IBM (n.d.); contoh aktuaria merupakan ilustrasi penulis.",
+    "widths": null
+  },
+  "TABLE_STUDI": {
+    "title": "Tabel 3.1 Peta sumber dan penelitian terdahulu",
+    "headers": [
+      "Sumber",
+      "Objek dan input",
+      "Metode dan validasi",
+      "Temuan atau fungsi serta batas"
+    ],
+    "rows": [
+      [
+        "Belikov (2026)",
+        "Taiwan; lima fitur LDA; data UCI",
+        "LDA; holdout stratified",
+        "Sumber utama angka pembanding; seed tidak tersedia."
+      ],
+      [
+        "Ptak-Chmielewska (2021)",
+        "UKM Polandia; n/periode tidak ditarik dari abstrak",
+        "LDA dan SVM; rincian tidak dipakai",
+        "Konteks empiris; hanya abstrak diperiksa."
+      ],
+      [
+        "Jolliffe dan Cadima (2016)",
+        "Kajian metode; n tidak berlaku",
+        "PCA",
+        "Dasar reduksi variasi; bukan data kasus."
+      ],
+      [
+        "Costello dan Osborne (2005)",
+        "Kajian EFA; n tidak berlaku",
+        "Ekstraksi, retensi, rotasi",
+        "Keputusan pengukuran; tidak memvalidasi rasio Taiwan."
+      ],
+      [
+        "Charrad et al. (2014)",
+        "Pengembangan perangkat; n kasus tidak berlaku",
+        "Indeks gerombol",
+        "Pembandingan K; paket tidak dijalankan."
+      ],
+      [
+        "Cawley dan Talbot (2010)",
+        "Kajian evaluasi; bukan perusahaan kasus",
+        "Bias seleksi model",
+        "Pemisahan pemilihan dan evaluasi."
+      ],
+      [
+        "Saito dan Rehmsmeier (2015)",
+        "Kajian metrik; bukan perusahaan kasus",
+        "ROC dan PR",
+        "Evaluasi ketidakseimbangan kelas."
+      ]
+    ],
+    "source": "Sumber: publikasi pada kolom pertama; cakupan akses terinci di Lampiran A.",
+    "widths": null
+  },
+  "TABLE_VARIABEL": {
+    "title": "Tabel 4.1 Definisi operasional input",
+    "headers": [
+      "Kode",
+      "Kolom sumber",
+      "Definisi dan satuan"
+    ],
+    "rows": [
+      [
+        "WC_TA",
+        "Working Capital to Total Assets",
+        "Modal kerja / total aset; nilai pada skala dataset, bukan rasio yang dihitung ulang."
+      ],
+      [
+        "RE_TA",
+        "Retained Earnings to Total Assets",
+        "Laba ditahan / total aset; nilai pada skala dataset, bukan rasio yang dihitung ulang."
+      ],
+      [
+        "ROA_A",
+        "ROA(A) before interest and % after tax",
+        "ROA(A) before interest and % after tax; nilai pada skala dataset, bukan rasio yang dihitung ulang."
+      ],
+      [
+        "EQ_LIAB",
+        "Equity to Liability",
+        "Ekuitas / liabilitas; nilai pada skala dataset, bukan rasio yang dihitung ulang."
+      ],
+      [
+        "TURNOVER",
+        "Total Asset Turnover",
+        "Penjualan / total aset secara konseptual; nilai pada skala dataset, bukan rasio yang dihitung ulang."
+      ]
+    ],
+    "source": "Sumber: UCI 572 dan pemetaan fitur studi utama. Pembilang/penyebut asli tidak tersedia; rincian kamus ada di workbook.",
+    "widths": null
+  },
+  "TABLE_ALUR": {
+    "title": "Tabel 5.1 Alur kasus dan komposisi label",
+    "headers": [
+      "Tahap",
+      "n",
+      "Kelas 0",
+      "Kelas 1"
+    ],
+    "rows": [
+      [
+        "Mentah",
+        6819,
+        6599,
+        220
+      ],
+      [
+        "Setelah pemeriksaan",
+        6819,
+        6599,
+        220
+      ],
+      [
+        "Train",
+        4773,
+        4619,
+        154
+      ],
+      [
+        "Test",
+        2046,
+        1980,
+        66
+      ]
+    ],
+    "source": "Sumber: pengolahan Python atas data UCI 572, 2026.",
+    "widths": null
+  },
+  "TABLE_DESKRIPTIF": {
+    "title": "Tabel 5.2 Statistik seluruh prediktor pada skala dataset",
+    "headers": [
+      "Variabel",
+      "Mean",
+      "SD",
+      "Median",
+      "Min; maks"
+    ],
+    "rows": [
+      [
+        "WC_TA",
+        "0,8141",
+        "0,0591",
+        "0,8103",
+        "0,0000; 1,0000"
+      ],
+      [
+        "RE_TA",
+        "0,9347",
+        "0,0256",
+        "0,9377",
+        "0,0000; 1,0000"
+      ],
+      [
+        "ROA_A",
+        "0,5586",
+        "0,0656",
+        "0,5598",
+        "0,0000; 1,0000"
+      ],
+      [
+        "EQ_LIAB",
+        "0,0476",
+        "0,0500",
+        "0,0338",
+        "0,0000; 1,0000"
+      ],
+      [
+        "TURNOVER",
+        "0,1416",
+        "0,1011",
+        "0,1184",
+        "0,0000; 1,0000"
+      ]
+    ],
+    "source": "Sumber: pengolahan Python atas data UCI 572, 2026.",
+    "widths": null
+  },
+  "TABLE_GROUP": {
+    "title": "Tabel 5.3 Mean dan simpangan baku prediktor menurut kelompok train",
+    "headers": [
+      "Variabel",
+      "Kelas 0 mean (SD)",
+      "Kelas 1 mean (SD)"
+    ],
+    "rows": [
+      [
+        "WC_TA",
+        "0,8160 (0,0588)",
+        "0,7549 (0,0569)"
+      ],
+      [
+        "RE_TA",
+        "0,9354 (0,0261)",
+        "0,9039 (0,0358)"
+      ],
+      [
+        "ROA_A",
+        "0,5609 (0,0609)",
+        "0,4548 (0,1120)"
+      ],
+      [
+        "EQ_LIAB",
+        "0,0479 (0,0483)",
+        "0,0264 (0,0647)"
+      ],
+      [
+        "TURNOVER",
+        "0,1423 (0,0989)",
+        "0,1056 (0,0875)"
+      ]
+    ],
+    "source": "Sumber: pengolahan Python atas data UCI 572, 2026.",
+    "widths": null
+  },
+  "TABLE_DIAGNOSTIK": {
+    "title": "Tabel 5.4 Pemeriksaan normalitas marginal pada train",
+    "headers": [
+      "Kelompok",
+      "Prediktor",
+      "W Shapiro",
+      "p",
+      "Skewness"
+    ],
+    "rows": [
+      [
+        0,
+        "WC_TA",
+        "0,9678",
+        "5,69e-31",
+        "-0,311"
+      ],
+      [
+        0,
+        "RE_TA",
+        "0,4932",
+        "1,55e-78",
+        "-14,001"
+      ],
+      [
+        0,
+        "ROA_A",
+        "0,9179",
+        "1,36e-44",
+        "-0,480"
+      ],
+      [
+        0,
+        "EQ_LIAB",
+        "0,5130",
+        "1,09e-77",
+        "7,648"
+      ],
+      [
+        0,
+        "TURNOVER",
+        "0,8342",
+        "1,54e-56",
+        "2,204"
+      ],
+      [
+        1,
+        "WC_TA",
+        "0,9918",
+        "0,526",
+        "0,290"
+      ],
+      [
+        1,
+        "RE_TA",
+        "0,7955",
+        "2,13e-13",
+        "-2,145"
+      ],
+      [
+        1,
+        "ROA_A",
+        "0,8044",
+        "4,49e-13",
+        "-1,823"
+      ],
+      [
+        1,
+        "EQ_LIAB",
+        "0,1298",
+        "3,01e-26",
+        "11,377"
+      ],
+      [
+        1,
+        "TURNOVER",
+        "0,8057",
+        "5,01e-13",
+        "2,389"
+      ]
+    ],
+    "source": "Sumber: pengolahan Python atas data UCI 572, 2026.",
+    "widths": null
+  },
+  "TABLE_MODEL": {
+    "title": "Tabel 5.5 Koefisien kanonik dan structure coefficients",
+    "headers": [
+      "Prediktor",
+      "Mentah",
+      "Standar",
+      "Struktur"
+    ],
+    "rows": [
+      [
+        "WC_TA",
+        "-5,514369",
+        "-0,323723",
+        "-0,578499"
+      ],
+      [
+        "RE_TA",
+        "-1,700996",
+        "-0,044977",
+        "-0,660134"
+      ],
+      [
+        "ROA_A",
+        "-12,921001",
+        "-0,816578",
+        "-0,931993"
+      ],
+      [
+        "EQ_LIAB",
+        "-2,059601",
+        "-0,100813",
+        "-0,244224"
+      ],
+      [
+        "TURNOVER",
+        "0,129390",
+        "0,012747",
+        "-0,206301"
+      ],
+      [
+        "Konstanta",
+        "13,360771",
+        "Tidak berlaku",
+        "Tidak berlaku"
+      ]
+    ],
+    "source": "Sumber: pengolahan Python atas data UCI 572, 2026.",
+    "widths": null
+  },
+  "TABLE_CLASSIFICATION": {
+    "title": "Tabel 5.6 Koefisien fungsi klasifikasi dengan prior empiris",
+    "headers": [
+      "Parameter",
+      "Kelas 0",
+      "Kelas 1"
+    ],
+    "rows": [
+      [
+        "WC_TA",
+        "246,366291",
+        "236,431506"
+      ],
+      [
+        "RE_TA",
+        "2061,339292",
+        "2058,274747"
+      ],
+      [
+        "ROA_A",
+        "-498,665840",
+        "-521,944545"
+      ],
+      [
+        "EQ_LIAB",
+        "-103,426484",
+        "-107,137098"
+      ],
+      [
+        "TURNOVER",
+        "-15,794856",
+        "-15,561745"
+      ],
+      [
+        "Konstanta",
+        "-921,166515",
+        "-902,014682"
+      ]
+    ],
+    "source": "Sumber: pengolahan Python atas data UCI 572, 2026.",
+    "widths": null
+  },
+  "TABLE_EXAMPLE": {
+    "title": "Tabel 5.7 Substitusi ke selisih skor pada TW03598",
+    "headers": [
+      "Input",
+      "Nilai x",
+      "Koefisien η",
+      "Kontribusi"
+    ],
+    "rows": [
+      [
+        "WC_TA",
+        "0,878322659",
+        "-9,934785",
+        "-8,725947"
+      ],
+      [
+        "RE_TA",
+        "0,795534997",
+        "-3,064545",
+        "-2,437953"
+      ],
+      [
+        "ROA_A",
+        "0,119930222",
+        "-23,278705",
+        "-2,791820"
+      ],
+      [
+        "EQ_LIAB",
+        "0,054710346",
+        "-3,710614",
+        "-0,203009"
+      ],
+      [
+        "TURNOVER",
+        "0,104947526",
+        "0,233111",
+        "0,024464"
+      ],
+      [
+        "Konstanta",
+        "",
+        "",
+        "19,151833"
+      ],
+      [
+        "Jumlah η",
+        "",
+        "",
+        "5,017569"
+      ]
+    ],
+    "source": "Sumber: pengolahan Python atas data UCI 572, 2026.",
+    "widths": null
+  },
+  "TABLE_EVALUASI": {
+    "title": "Tabel 5.8 Evaluasi terpisah menurut skema dan ambang",
+    "headers": [
+      "Skema",
+      "TN; FP; FN; TP",
+      "Recall",
+      "Precision",
+      "F1"
+    ],
+    "rows": [
+      [
+        "train",
+        "4578; 41; 130; 24",
+        "0,1558",
+        "0,3692",
+        "0,2192"
+      ],
+      [
+        "test",
+        "1973; 7; 54; 12",
+        "0,1818",
+        "0,6316",
+        "0,2824"
+      ],
+      [
+        "OOF_train",
+        "4575; 44; 131; 23",
+        "0,1494",
+        "0,3433",
+        "0,2081"
+      ],
+      [
+        "test_OOF_threshold",
+        "1921; 59; 38; 28",
+        "0,4242",
+        "0,3218",
+        "0,3660"
+      ],
+      [
+        "test_equal_prior",
+        "1747; 233; 20; 46",
+        "0,6970",
+        "0,1649",
+        "0,2667"
+      ],
+      [
+        "baseline_test",
+        "1980; 0; 66; 0",
+        "0,0000",
+        "Tidak terdefinisi",
+        "0,0000"
+      ]
+    ],
+    "source": "Sumber: pengolahan Python atas data UCI 572, 2026.",
+    "widths": null
+  },
+  "TABLE_BANDING": {
+    "title": "Tabel 5.9 Perbandingan keluaran utama dengan sumber",
+    "headers": [
+      "Komponen",
+      "Sumber",
+      "Ulang",
+      "Selisih",
+      "Status"
+    ],
+    "rows": [
+      [
+        "n total",
+        "6819",
+        "6819",
+        "0",
+        "Cocok eksak"
+      ],
+      [
+        "n train",
+        "4773",
+        "4773",
+        "0",
+        "Cocok eksak"
+      ],
+      [
+        "n test",
+        "2046",
+        "2046",
+        "0",
+        "Cocok eksak"
+      ],
+      [
+        "TN",
+        "1973",
+        "1973",
+        "0",
+        "Cocok eksak"
+      ],
+      [
+        "FP",
+        "7",
+        "7",
+        "0",
+        "Cocok eksak"
+      ],
+      [
+        "FN",
+        "54",
+        "54",
+        "0",
+        "Cocok eksak"
+      ],
+      [
+        "TP",
+        "12",
+        "12",
+        "0",
+        "Cocok eksak"
+      ],
+      [
+        "ROC_AUC",
+        "0,9040",
+        "0,903750",
+        "-0,000250",
+        "Cocok pembulatan"
+      ],
+      [
+        "AP",
+        "0,3090",
+        "0,308524",
+        "-0,000476",
+        "Cocok pembulatan"
+      ],
+      [
+        "precision",
+        "0,6320",
+        "0,631579",
+        "-0,000421",
+        "Cocok pembulatan"
+      ],
+      [
+        "sensitivity",
+        "0,1820",
+        "0,181818",
+        "-0,000182",
+        "Cocok pembulatan"
+      ],
+      [
+        "F1",
+        "0,2820",
+        "0,282353",
+        "0,000353",
+        "Cocok pembulatan"
+      ],
+      [
+        "Seed sumber",
+        "Tidak dilaporkan",
+        "42",
+        "n.a.",
+        "Tidak dapat diperiksa"
+      ],
+      [
+        "Eigenvalue",
+        "Tidak dilaporkan",
+        "0,101390",
+        "n.a.",
+        "Tidak dapat diperiksa"
+      ],
+      [
+        "Ambang perluasan",
+        "0,1260",
+        "0,124131",
+        "n.a.",
+        "Tidak sebanding langsung; OOF vs train"
+      ]
+    ],
+    "source": "Sumber: Belikov (2026), Tabel 1–2; hasil ulang Python. Toleransi metrik ±0,0005; identitas split tidak terverifikasi.",
+    "widths": null
+  },
+  "TABLE_LINKAGE": {
+    "title": "Tabel E.1 Keterhubungan masalah tujuan dan bukti",
+    "headers": [
+      "Masalah",
+      "Tujuan",
+      "Bagian jawaban",
+      "Bukti"
+    ],
+    "rows": [
+      [
+        "1 Definisi",
+        "Menjelaskan karakteristik",
+        "2.1–2.2; 6.1",
+        "Notasi, struktur data, batas istilah"
+      ],
+      [
+        "2 Empat metode",
+        "Membedakan konsep dan prosedur",
+        "2.3–2.8; 6.1",
+        "Tabel 2.1; persamaan; PCA ilustratif"
+      ],
+      [
+        "3 Penerapan SPSS",
+        "Menyiapkan dan memeriksa analisis",
+        "4.7; 5.4–5.6; 6.1",
+        "SPS belum dieksekusi; output Python aktual"
+      ],
+      [
+        "4 Konsistensi",
+        "Membandingkan hasil",
+        "5.7; 6.1",
+        "Tabel 5.9; cocok keluaran utama, proses parsial"
+      ]
+    ],
+    "source": "Sumber: rancangan makalah.",
+    "widths": null
+  },
+  "TABLE_SOURCES": {
+    "title": "Tabel A.1 Register ringkas sumber",
+    "headers": [
+      "ID",
+      "Sumber",
+      "Locator dan cakupan"
+    ],
+    "rows": [
+      [
+        "S01",
+        "Belikov (2026)",
+        "Data; Methodology; Tables 1–2; Teks lengkap HTML; seed tidak dicantumkan"
+      ],
+      [
+        "S02",
+        "UCI Machine Learning Repository (2020)",
+        "Dataset Information; Additional Variable Information; data.csv; Data kurasi; 1999–2009; CC BY 4.0"
+      ],
+      [
+        "S03",
+        "Jolliffe dan Cadima (2016)",
+        "Bagian 2, dasar PCA; Teks lengkap diakses melalui unduhan HTML"
+      ],
+      [
+        "S04",
+        "NIST (n.d.)",
+        "6.5.5, formulasi matriks dan standardisasi; Dokumentasi; istilah principal factors tidak disamakan dengan EFA"
+      ],
+      [
+        "S05",
+        "Costello dan Osborne (2005)",
+        "PDF hlm. 2–6; tercetak 1–5; Extraction, Rotation, Sample Size; Teks lengkap PDF"
+      ],
+      [
+        "S06",
+        "Horn (1965)",
+        "Abstract; Abstrak dan metadata; hanya gagasan koreksi sampling melalui variabel acak"
+      ],
+      [
+        "S07",
+        "Murtagh dan Legendre (2011)",
+        "Bagian 2–4; PDF hlm. 2–15; Versi arXiv v2; tanggal versi mengikuti laman arXiv, bukan tanggal kompilasi PDF"
+      ],
+      [
+        "S08",
+        "Charrad et al. (2014)",
+        "Abstract; metadata artikel; Dukungan keberadaan berbagai indeks; paket tidak dijalankan"
+      ],
+      [
+        "S09",
+        "Saito dan Rehmsmeier (2015)",
+        "Abstract; Results and Discussion; Artikel metodologis; bukan hasil empiris Taiwan"
+      ],
+      [
+        "S10",
+        "Cawley dan Talbot (2010)",
+        "Abstract; bagian model selection dan performance evaluation; Teks lengkap PDF tersedia"
+      ],
+      [
+        "S11",
+        "IBM (n.d.)",
+        "DISCRIMINANT; STATISTICS; Discriminant Analysis; Isi terindeks diperiksa; akses langsung sebagian 403; syntax belum dieksekusi"
+      ],
+      [
+        "S12",
+        "IAIS (2025)",
+        "Bagian 3.2.3, tercetak hlm. 30, PDF hlm. 34; PDF lengkap; risiko investasi private credit"
+      ],
+      [
+        "S13",
+        "OECD (2026)",
+        "Abstract; Executive summary; terbit 2 November 2026; Konteks data 2025; bukan input model individual"
+      ],
+      [
+        "S14",
+        "Pedregosa et al. (2011)",
+        "Abstract; author metadata; Identitas perangkat lunak; tidak dijadikan dokumentasi versi 1.9.1"
+      ],
+      [
+        "S15",
+        "Ptak-Chmielewska (2021)",
+        "Abstract; metadata; Hanya abstrak; tidak dipakai untuk angka hasil rinci"
+      ],
+      [
+        "S16",
+        "R Core Team (n.d.)",
+        "Details, model; scores; maximum likelihood; Dokumentasi dinamis; EFA tidak dijalankan"
+      ],
+      [
+        "S17",
+        "scikit-learn (n.d.)",
+        "LDA/QDA; Clustering; Metrics and scoring; Satu sumber dokumentasi; tidak dihitung terpisah tiap halaman"
+      ],
+      [
+        "S18",
+        "UCLA (n.d.)",
+        "Eigenvalues; Canonical correlation; Structure matrix; Contoh pendidikan; tidak mengatribusikan data Taiwan ke contoh UCLA"
+      ]
+    ],
+    "source": "URL dan metadata lengkap terdapat dalam daftar pustaka dan workbook sheet Sumber.",
+    "widths": null
+  },
+  "TABLE_AUDIT": {
+    "title": "Tabel F.1 Matriks ringkas dukungan klaim",
+    "headers": [
+      "ID dan lokasi",
+      "Klaim",
+      "Sumber dan batas"
+    ],
+    "rows": [
+      [
+        "K01; 1.1; 5.9",
+        "Risiko kredit relevan pada investasi private credit",
+        "S12; Bukan validasi model Taiwan"
+      ],
+      [
+        "K02; 1.1; 4.2",
+        "Dataset historis Taiwan 1999–2009; label terkait ketentuan bursa",
+        "S02; Tanpa audit kejadian per baris"
+      ],
+      [
+        "K03; 2.3",
+        "PCA memaksimumkan variasi pada arah ortogonal",
+        "S03; Tidak menjamin pemisahan label"
+      ],
+      [
+        "K04; 2.2–2.3",
+        "PCA korelasi memakai standardisasi",
+        "S04; Standardisasi adalah pilihan analitis"
+      ],
+      [
+        "K05; 2.4",
+        "PCA total variance berbeda dari common factors",
+        "S05; Rasio tidak otomatis reflektif"
+      ],
+      [
+        "K06; 2.4",
+        "Rotasi dan jumlah faktor perlu alasan",
+        "S05; Tidak ada EFA empiris kasus ini"
+      ],
+      [
+        "K07; 2.3–2.4",
+        "Gagasan pembandingan eigenvalue dengan variabel acak",
+        "S06; Tidak mengklaim membaca seluruh artikel"
+      ],
+      [
+        "K08; 2.5",
+        "Implementasi Ward perlu konvensi jarak",
+        "S07; Tidak ada dendrogram empiris"
+      ],
+      [
+        "K09; 2.5",
+        "Berbagai indeks dapat membantu memilih K",
+        "S08; Tidak memilih K secara mekanis"
+      ],
+      [
+        "K10; 2.8; 5.6",
+        "Precision–recall relevan untuk kelas tidak seimbang",
+        "S09; AP bukan jaminan kalibrasi"
+      ],
+      [
+        "K11; 4.8",
+        "Pemilihan ambang dipisahkan dari test",
+        "S10; OOF dipakai memilih; test mengevaluasi"
+      ],
+      [
+        "K12; 4.7",
+        "DISCRIMINANT SELECT, prior, output dan leave-one-out",
+        "S11; Belum dieksekusi SPSS"
+      ],
+      [
+        "K13; 3.3; 5.7",
+        "ROC 0.904 AP 0.309; TN1973 FP7 FN54 TP12",
+        "S01; Seed tidak tersedia"
+      ],
+      [
+        "K14; 5.7",
+        "Metrik utama cocok; proses hanya parsial",
+        "S01 + O01; Tidak membuktikan identitas split"
+      ],
+      [
+        "K15; 3.5; 5.9",
+        "Laporan terkini memakai data industri 2025",
+        "S13; Bukan data eksternal lima rasio"
+      ],
+      [
+        "K16; 4.5",
+        "scikit-learn mendukung metode supervised/unsupervised",
+        "S14; Versi aktual dicatat terpisah"
+      ],
+      [
+        "K17; 3.2",
+        "Studi Polandia membandingkan LDA dan SVM",
+        "S15; Tidak menyebut angka yang tak diakses"
+      ],
+      [
+        "K18; 2.4",
+        "Model faktor dan taksiran skor",
+        "S16; Model ortogonal dasar diperluas dengan Phi"
+      ],
+      [
+        "K19; 2.5–2.8",
+        "LDA/QDA dan metrik implementasi",
+        "S17; Tidak menganggap default identik antarversi"
+      ],
+      [
+        "K20; 2.6",
+        "Eigenvalue, kanonik, structure matrix dan centroid",
+        "S18; Bukan output SPSS kasus ini"
+      ],
+      [
+        "K21; 5.1–5.6",
+        "n, deskriptif, model dan evaluasi aktual",
+        "O01; Keterbatasan split dan data kurasi"
+      ],
+      [
+        "K22; 5.3",
+        "Box M dan diagnostik menentang kesamaan kovarians",
+        "O01; Aproksimasi chi-square, bukan SPSS"
+      ],
+      [
+        "K23; 5.5",
+        "TW03598 posterior 0.993423",
+        "O01 + S02; Probabilitas model belum dikalibrasi"
+      ],
+      [
+        "K24; 5.8",
+        "Sensitivitas seed dan prior mengubah kinerja",
+        "O01; Bukan confidence interval"
+      ],
+      [
+        "K25; 5.8",
+        "Dua komponen PCA menjelaskan 64.994%",
+        "O01; Tidak dipakai dalam LDA"
+      ]
+    ],
+    "source": "Register lengkap beserta locator dan status berada di Audit_Sitasi.",
+    "widths": null
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "project": "22e42106-67e0-4f2f-a435-b7be95d797a9",
+  "lda": "26f9acb1-c863-4aff-b21f-095a128df253",
+  "pca": "11587f46-b8bc-47ff-94b5-53e12f651310",
+  "extra": {
+    "kmeans": "7d4d684f-8828-4f20-9ba2-9b717454dac4",
+    "hierarchical": "85d8f946-d567-4e3d-b79b-69d8ad0118a1",
+    "efa": "7f20042d-e858-46e5-862a-5a4a7a9f5519"
+  },
+  "snapshot": "66523505-9d36-48b6-ab05-0e15727a7679",
+  "presentation_url": "http://127.0.0.1:5173/present/66523505-9d36-48b6-ab05-0e15727a7679",
+  "result_url": "http://127.0.0.1:5173/p/22e42106-67e0-4f2f-a435-b7be95d797a9/results/26f9acb1-c863-4aff-b21f-095a128df253/summary",
+  "sections": 18,
+  "backend_tests": 40,
+  "browser_tests": 8,
+  "source": "Actual local audit runs; synthetic extra methods are labeled separately"
+}

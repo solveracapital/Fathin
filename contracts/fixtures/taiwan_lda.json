@@ -1,0 +1,1535 @@
+{
+  "schema_version": "1.0.0",
+  "run_id": "eaa36a0d-9313-4b38-8508-958aacf33bb5",
+  "method": "lda",
+  "subset_definitions": {
+    "train": {
+      "n": 4773
+    },
+    "test": {
+      "n": 2046
+    },
+    "excluded": {
+      "n": 0
+    }
+  },
+  "metrics": [
+    {
+      "id": "train_accuracy",
+      "label": "accuracy",
+      "value": 0.9641734758013828,
+      "unit": "ratio",
+      "subset_id": "train",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "train_sensitivity",
+      "label": "sensitivity",
+      "value": 0.15584415584415584,
+      "unit": "ratio",
+      "subset_id": "train",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "train_specificity",
+      "label": "specificity",
+      "value": 0.9911236198311323,
+      "unit": "ratio",
+      "subset_id": "train",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "train_precision",
+      "label": "precision",
+      "value": 0.36923076923076925,
+      "unit": "ratio",
+      "subset_id": "train",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "train_F1",
+      "label": "F1",
+      "value": 0.2191780821917808,
+      "unit": "ratio",
+      "subset_id": "train",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "train_balanced_accuracy",
+      "label": "balanced_accuracy",
+      "value": 0.573483887837644,
+      "unit": "ratio",
+      "subset_id": "train",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "train_prevalence",
+      "label": "prevalence",
+      "value": 0.03226482296249738,
+      "unit": "ratio",
+      "subset_id": "train",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "train_ROC_AUC",
+      "label": "ROC_AUC",
+      "value": 0.8868451314868289,
+      "unit": "ratio",
+      "subset_id": "train",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "train_AP",
+      "label": "AP",
+      "value": 0.2647170959963136,
+      "unit": "ratio",
+      "subset_id": "train",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "test_accuracy",
+      "label": "accuracy",
+      "value": 0.9701857282502444,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "test_sensitivity",
+      "label": "sensitivity",
+      "value": 0.18181818181818182,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "test_specificity",
+      "label": "specificity",
+      "value": 0.9964646464646465,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "test_precision",
+      "label": "precision",
+      "value": 0.631578947368421,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "test_F1",
+      "label": "F1",
+      "value": 0.2823529411764706,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "test_balanced_accuracy",
+      "label": "balanced_accuracy",
+      "value": 0.5891414141414142,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "test_prevalence",
+      "label": "prevalence",
+      "value": 0.03225806451612903,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "test_ROC_AUC",
+      "label": "ROC_AUC",
+      "value": 0.903749617385981,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "test_AP",
+      "label": "AP",
+      "value": 0.30852372633028535,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "baseline_test_accuracy",
+      "label": "accuracy",
+      "value": 0.967741935483871,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "baseline_test_sensitivity",
+      "label": "sensitivity",
+      "value": 0.0,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "baseline_test_specificity",
+      "label": "specificity",
+      "value": 1.0,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "baseline_test_precision",
+      "label": "precision",
+      "value": null,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "undefined",
+      "reason": {
+        "code": "UNDEFINED",
+        "message": "Tidak terdefinisi pada subset ini."
+      },
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "baseline_test_F1",
+      "label": "F1",
+      "value": 0.0,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "baseline_test_balanced_accuracy",
+      "label": "balanced_accuracy",
+      "value": 0.5,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "baseline_test_prevalence",
+      "label": "prevalence",
+      "value": 0.03225806451612903,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "baseline_test_ROC_AUC",
+      "label": "ROC_AUC",
+      "value": 0.5,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "baseline_test_AP",
+      "label": "AP",
+      "value": 0.03225806451612903,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "OOF_train_accuracy",
+      "label": "accuracy",
+      "value": 0.9633354284517075,
+      "unit": "ratio",
+      "subset_id": "train_oof",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "OOF_train_sensitivity",
+      "label": "sensitivity",
+      "value": 0.14935064935064934,
+      "unit": "ratio",
+      "subset_id": "train_oof",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "OOF_train_specificity",
+      "label": "specificity",
+      "value": 0.9904741285992639,
+      "unit": "ratio",
+      "subset_id": "train_oof",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "OOF_train_precision",
+      "label": "precision",
+      "value": 0.34328358208955223,
+      "unit": "ratio",
+      "subset_id": "train_oof",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "OOF_train_F1",
+      "label": "F1",
+      "value": 0.2081447963800905,
+      "unit": "ratio",
+      "subset_id": "train_oof",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "OOF_train_balanced_accuracy",
+      "label": "balanced_accuracy",
+      "value": 0.5699123889749567,
+      "unit": "ratio",
+      "subset_id": "train_oof",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "OOF_train_prevalence",
+      "label": "prevalence",
+      "value": 0.03226482296249738,
+      "unit": "ratio",
+      "subset_id": "train_oof",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "OOF_train_ROC_AUC",
+      "label": "ROC_AUC",
+      "value": 0.8838197957054853,
+      "unit": "ratio",
+      "subset_id": "train_oof",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "OOF_train_AP",
+      "label": "AP",
+      "value": 0.25939406599106124,
+      "unit": "ratio",
+      "subset_id": "train_oof",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold_accuracy",
+      "label": "accuracy",
+      "value": 0.9525904203323559,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold_sensitivity",
+      "label": "sensitivity",
+      "value": 0.42424242424242425,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold_specificity",
+      "label": "specificity",
+      "value": 0.9702020202020202,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold_precision",
+      "label": "precision",
+      "value": 0.3218390804597701,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold_F1",
+      "label": "F1",
+      "value": 0.3660130718954248,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold_balanced_accuracy",
+      "label": "balanced_accuracy",
+      "value": 0.6972222222222222,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold_prevalence",
+      "label": "prevalence",
+      "value": 0.03225806451612903,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold_ROC_AUC",
+      "label": "ROC_AUC",
+      "value": 0.903749617385981,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold_AP",
+      "label": "AP",
+      "value": 0.30852372633028535,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_equal_prior_accuracy",
+      "label": "accuracy",
+      "value": 0.8763440860215054,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    },
+    {
+      "id": "test_equal_prior_sensitivity",
+      "label": "sensitivity",
+      "value": 0.696969696969697,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    },
+    {
+      "id": "test_equal_prior_specificity",
+      "label": "specificity",
+      "value": 0.8823232323232323,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    },
+    {
+      "id": "test_equal_prior_precision",
+      "label": "precision",
+      "value": 0.16487455197132617,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    },
+    {
+      "id": "test_equal_prior_F1",
+      "label": "F1",
+      "value": 0.26666666666666666,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    },
+    {
+      "id": "test_equal_prior_balanced_accuracy",
+      "label": "balanced_accuracy",
+      "value": 0.7896464646464647,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    },
+    {
+      "id": "test_equal_prior_prevalence",
+      "label": "prevalence",
+      "value": 0.03225806451612903,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    },
+    {
+      "id": "test_equal_prior_ROC_AUC",
+      "label": "ROC_AUC",
+      "value": 0.903749617385981,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    },
+    {
+      "id": "test_equal_prior_AP",
+      "label": "AP",
+      "value": 0.30852372633028535,
+      "unit": "ratio",
+      "subset_id": "test",
+      "status": "ok",
+      "reason": null,
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    }
+  ],
+  "table_index": [
+    {
+      "id": "train",
+      "title": "train",
+      "columns": [
+        {
+          "key": "TN",
+          "label": "TN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FP",
+          "label": "FP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FN",
+          "label": "FN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "TP",
+          "label": "TP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 1,
+      "subset_id": "train",
+      "evidence_ids": [
+        "train"
+      ]
+    },
+    {
+      "id": "test",
+      "title": "test",
+      "columns": [
+        {
+          "key": "TN",
+          "label": "TN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FP",
+          "label": "FP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FN",
+          "label": "FN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "TP",
+          "label": "TP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 1,
+      "subset_id": "test",
+      "evidence_ids": [
+        "test"
+      ]
+    },
+    {
+      "id": "baseline_test",
+      "title": "baseline_test",
+      "columns": [
+        {
+          "key": "TN",
+          "label": "TN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FP",
+          "label": "FP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FN",
+          "label": "FN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "TP",
+          "label": "TP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 1,
+      "subset_id": "test",
+      "evidence_ids": [
+        "baseline_test"
+      ]
+    },
+    {
+      "id": "OOF_train",
+      "title": "OOF_train",
+      "columns": [
+        {
+          "key": "TN",
+          "label": "TN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FP",
+          "label": "FP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FN",
+          "label": "FN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "TP",
+          "label": "TP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 1,
+      "subset_id": "train_oof",
+      "evidence_ids": [
+        "OOF_train"
+      ]
+    },
+    {
+      "id": "test_OOF_threshold",
+      "title": "test_OOF_threshold",
+      "columns": [
+        {
+          "key": "TN",
+          "label": "TN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FP",
+          "label": "FP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FN",
+          "label": "FN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "TP",
+          "label": "TP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 1,
+      "subset_id": "test",
+      "evidence_ids": [
+        "test_OOF_threshold"
+      ]
+    },
+    {
+      "id": "test_equal_prior",
+      "title": "test_equal_prior",
+      "columns": [
+        {
+          "key": "TN",
+          "label": "TN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FP",
+          "label": "FP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "FN",
+          "label": "FN",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "TP",
+          "label": "TP",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 1,
+      "subset_id": "test",
+      "evidence_ids": [
+        "test_equal_prior"
+      ]
+    },
+    {
+      "id": "visual_confusion_matrix",
+      "title": "visual_confusion_matrix",
+      "columns": [
+        {
+          "key": "actual",
+          "label": "actual",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "predicted",
+          "label": "predicted",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "count",
+          "label": "count",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 4,
+      "subset_id": "test",
+      "evidence_ids": [
+        "visual_confusion_matrix"
+      ]
+    },
+    {
+      "id": "visual_roc",
+      "title": "visual_roc",
+      "columns": [
+        {
+          "key": "false_positive_rate",
+          "label": "false_positive_rate",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "sensitivity",
+          "label": "sensitivity",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "threshold",
+          "label": "threshold",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 103,
+      "subset_id": "test",
+      "evidence_ids": [
+        "visual_roc"
+      ]
+    },
+    {
+      "id": "visual_precision_recall",
+      "title": "visual_precision_recall",
+      "columns": [
+        {
+          "key": "recall",
+          "label": "recall",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "precision",
+          "label": "precision",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "threshold",
+          "label": "threshold",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 2047,
+      "subset_id": "test",
+      "evidence_ids": [
+        "visual_precision_recall"
+      ]
+    },
+    {
+      "id": "coefficients",
+      "title": "coefficients",
+      "columns": [
+        {
+          "key": "feature",
+          "label": "feature",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "b0",
+          "label": "b0",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "b1",
+          "label": "b1",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "canonical",
+          "label": "canonical",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "standardized",
+          "label": "standardized",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "structure",
+          "label": "structure",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 5,
+      "subset_id": "train",
+      "evidence_ids": [
+        "coefficients"
+      ]
+    },
+    {
+      "id": "model_summary",
+      "title": "model_summary",
+      "columns": [
+        {
+          "key": "parameter",
+          "label": "parameter",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "value",
+          "label": "value",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 10,
+      "subset_id": "train",
+      "evidence_ids": [
+        "model_summary"
+      ]
+    },
+    {
+      "id": "W",
+      "title": "W",
+      "columns": [
+        {
+          "key": "row",
+          "label": "row",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "values",
+          "label": "values",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 5,
+      "subset_id": "train",
+      "evidence_ids": [
+        "W"
+      ]
+    },
+    {
+      "id": "B",
+      "title": "B",
+      "columns": [
+        {
+          "key": "row",
+          "label": "row",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "values",
+          "label": "values",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 5,
+      "subset_id": "train",
+      "evidence_ids": [
+        "B"
+      ]
+    },
+    {
+      "id": "Sp",
+      "title": "Sp",
+      "columns": [
+        {
+          "key": "row",
+          "label": "row",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "values",
+          "label": "values",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 5,
+      "subset_id": "train",
+      "evidence_ids": [
+        "Sp"
+      ]
+    },
+    {
+      "id": "means",
+      "title": "means",
+      "columns": [
+        {
+          "key": "row",
+          "label": "row",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "values",
+          "label": "values",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 2,
+      "subset_id": "train",
+      "evidence_ids": [
+        "means"
+      ]
+    },
+    {
+      "id": "group_covariances",
+      "title": "group_covariances",
+      "columns": [
+        {
+          "key": "row",
+          "label": "row",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "values",
+          "label": "values",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 2,
+      "subset_id": "train",
+      "evidence_ids": [
+        "group_covariances"
+      ]
+    },
+    {
+      "id": "marginal",
+      "title": "marginal",
+      "columns": [
+        {
+          "key": "group",
+          "label": "group",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "feature_index",
+          "label": "feature_index",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "W",
+          "label": "W",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "p_value",
+          "label": "p_value",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "skew",
+          "label": "skew",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "kurtosis",
+          "label": "kurtosis",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "p_value_limited",
+          "label": "p_value_limited",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "status",
+          "label": "status",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "reason",
+          "label": "reason",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 10,
+      "subset_id": "train",
+      "evidence_ids": [
+        "marginal"
+      ]
+    },
+    {
+      "id": "predictions",
+      "title": "predictions",
+      "columns": [
+        {
+          "key": "row_id",
+          "label": "row_id",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "actual",
+          "label": "actual",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "posterior",
+          "label": "posterior",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "eta",
+          "label": "eta",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "canonical_score",
+          "label": "canonical_score",
+          "type": "number",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "subset",
+          "label": "subset",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 6819,
+      "subset_id": "all",
+      "evidence_ids": [
+        "predictions"
+      ]
+    },
+    {
+      "id": "preprocessing",
+      "title": "preprocessing",
+      "columns": [
+        {
+          "key": "parameter",
+          "label": "parameter",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        },
+        {
+          "key": "value",
+          "label": "value",
+          "type": "text",
+          "unit": "none",
+          "precision": 6
+        }
+      ],
+      "row_count": 5,
+      "subset_id": "train",
+      "evidence_ids": [
+        "preprocessing"
+      ]
+    }
+  ],
+  "formula_index": [
+    {
+      "id": "method_formula",
+      "title": "lda",
+      "latex": "\\eta=x^T(b_1-b_0)+c_1-c_0;\\quad p_1=\\mathrm{expit}(\\eta)",
+      "symbol_definitions": {
+        "x": "Vektor fitur pada skala pengolahan"
+      },
+      "convention": "Lihat konfigurasi dan parameter tersimpan.",
+      "inputs": [
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6"
+      ],
+      "intermediate_table_ids": [
+        "train",
+        "test",
+        "baseline_test",
+        "OOF_train",
+        "test_OOF_threshold",
+        "test_equal_prior",
+        "visual_confusion_matrix",
+        "visual_roc",
+        "visual_precision_recall",
+        "coefficients",
+        "model_summary",
+        "W",
+        "B",
+        "Sp",
+        "means",
+        "group_covariances",
+        "marginal",
+        "predictions",
+        "preprocessing"
+      ],
+      "output_refs": [],
+      "explanation": "Dari 66 kasus positif test, 12 terdeteksi dan 54 terlewat. Terdapat 7 alarm keliru."
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "UNEQUAL_COVARIANCE",
+      "severity": "warning",
+      "title": "Kovarians berbeda",
+      "explanation": "Box M aproksimasi menentang kesamaan kovarians; evaluasi klasifikasi tetap dibaca terpisah.",
+      "evidence_ids": [
+        "marginal"
+      ],
+      "affected_column_ids": [],
+      "suggested_actions": [
+        "Tinjau batas interpretasi."
+      ]
+    },
+    {
+      "code": "INTERNAL_VALIDATION",
+      "severity": "warning",
+      "title": "Batas validasi",
+      "explanation": "Evaluasi internal bukan bukti validitas temporal, kausal, atau kalibrasi pada populasi sasaran.",
+      "evidence_ids": [
+        "test"
+      ],
+      "affected_column_ids": [],
+      "suggested_actions": [
+        "Tinjau batas interpretasi."
+      ]
+    }
+  ],
+  "narrative_blocks": [
+    {
+      "id": "summary",
+      "title": "Interpretasi",
+      "text": "Dari 66 kasus positif test, 12 terdeteksi dan 54 terlewat. Terdapat 7 alarm keliru.",
+      "evidence_ids": [
+        "train",
+        "test"
+      ],
+      "severity": "info",
+      "origin": "deterministic",
+      "run_id": "eaa36a0d-9313-4b38-8508-958aacf33bb5"
+    }
+  ],
+  "visual_manifest": [
+    {
+      "id": "confusion_matrix",
+      "kind": "confusion_matrix",
+      "title": "Kasus yang terdeteksi dan terlewat",
+      "purpose": "Jumlah kasus; baris aktual dan kolom prediksi. Persentase dibaca per baris aktual.",
+      "status": "shown",
+      "reason_code": "ELIGIBLE",
+      "reason_text": "Jumlah kasus; baris aktual dan kolom prediksi. Persentase dibaca per baris aktual.",
+      "data_ref": "/api/v1/runs/eaa36a0d-9313-4b38-8508-958aacf33bb5/visuals/confusion_matrix",
+      "subset_id": "test",
+      "axes": {},
+      "series": [],
+      "encodings": {},
+      "evidence_ids": [
+        "visual_confusion_matrix"
+      ],
+      "projection": null,
+      "sampling": null,
+      "default_order": 0,
+      "table_alternative_ref": "visual_confusion_matrix"
+    },
+    {
+      "id": "roc",
+      "kind": "roc",
+      "title": "Kurva ROC",
+      "purpose": "Sensitivity terhadap false positive rate; ringkasan pemeringkatan, bukan kalibrasi probabilitas.",
+      "status": "available",
+      "reason_code": "ELIGIBLE",
+      "reason_text": "Sensitivity terhadap false positive rate; ringkasan pemeringkatan, bukan kalibrasi probabilitas.",
+      "data_ref": "/api/v1/runs/eaa36a0d-9313-4b38-8508-958aacf33bb5/visuals/roc",
+      "subset_id": "test",
+      "axes": {},
+      "series": [],
+      "encodings": {},
+      "evidence_ids": [
+        "visual_roc"
+      ],
+      "projection": null,
+      "sampling": null,
+      "default_order": 1,
+      "table_alternative_ref": "visual_roc"
+    },
+    {
+      "id": "precision_recall",
+      "kind": "precision_recall",
+      "title": "Ketepatan sinyal dan cakupan deteksi",
+      "purpose": "Recall adalah bagian kasus positif yang ditemukan; precision adalah bagian sinyal yang benar. Garis bertangga mengikuti definisi average precision.",
+      "status": "shown",
+      "reason_code": "ELIGIBLE",
+      "reason_text": "Recall adalah bagian kasus positif yang ditemukan; precision adalah bagian sinyal yang benar. Garis bertangga mengikuti definisi average precision.",
+      "data_ref": "/api/v1/runs/eaa36a0d-9313-4b38-8508-958aacf33bb5/visuals/precision_recall",
+      "subset_id": "test",
+      "axes": {},
+      "series": [],
+      "encodings": {},
+      "evidence_ids": [
+        "visual_precision_recall"
+      ],
+      "projection": null,
+      "sampling": null,
+      "default_order": 2,
+      "table_alternative_ref": "visual_precision_recall"
+    }
+  ],
+  "provenance": {
+    "source_sha256": "6914ecc15b1c329b828afb6c4d15fe579a718503cfded2e39603d6e2cfb38943",
+    "dataset_version_id": "9afe6bd8-a544-4164-98e7-8927070d9e06",
+    "config_hash": "9017d87da24e54867b6c315fa11d52ee80a18713d1617534856d1f96df6f2d99",
+    "engine_versions": {
+      "numpy": "2.5.4",
+      "scipy": "1.18.1",
+      "pandas": "3.1.1",
+      "scikit-learn": "1.9.1",
+      "fastapi": "0.162.0"
+    },
+    "visual_policy_version": "1.0.0",
+    "feature_labels": [
+      "WC_TA",
+      "RE_TA",
+      "ROA_A",
+      "EQ_LIAB",
+      "TURNOVER"
+    ],
+    "feature_ids": [
+      "c2",
+      "c3",
+      "c4",
+      "c5",
+      "c6"
+    ],
+    "target_label": "bankrupt",
+    "positive_label": 1,
+    "negative_label": 0,
+    "split_manifest_hash": "116de831cbba39045cea000fb47620ea9d337c9a424cec299c2a7f369258dc34"
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "bar",
+        "histogram",
+        "boxplot",
+        "heatmap",
+        "line",
+        "scatter",
+        "biplot",
+        "scree",
+        "dendrogram",
+        "confusion_matrix",
+        "roc",
+        "precision_recall",
+        "silhouette",
+        "contribution"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "purpose": {
+      "title": "Purpose",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "shown",
+        "available",
+        "omitted",
+        "unavailable"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "reason_code": {
+      "title": "Reason Code",
+      "type": "string"
+    },
+    "reason_text": {
+      "title": "Reason Text",
+      "type": "string"
+    },
+    "data_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Data Ref"
+    },
+    "subset_id": {
+      "title": "Subset Id",
+      "type": "string"
+    },
+    "axes": {
+      "additionalProperties": true,
+      "title": "Axes",
+      "type": "object"
+    },
+    "series": {
+      "items": {},
+      "title": "Series",
+      "type": "array"
+    },
+    "encodings": {
+      "additionalProperties": true,
+      "title": "Encodings",
+      "type": "object"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "projection": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Projection"
+    },
+    "sampling": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Sampling"
+    },
+    "default_order": {
+      "title": "Default Order",
+      "type": "integer"
+    },
+    "table_alternative_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Table Alternative Ref"
+    }
+  },
+  "required": [
+    "id",
+    "kind",
+    "title",
+    "purpose",
+    "status",
+    "reason_code",
+    "reason_text",
+    "data_ref",
+    "subset_id",
+    "axes",
+    "series",
+    "encodings",
+    "evidence_ids",
+    "projection",
+    "sampling",
+    "default_order",
+    "table_alternative_ref"
+  ],
+  "title": "Visual",
+  "type": "object"
+}

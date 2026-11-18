@@ -1,0 +1,10 @@
+{
+  "project": "6035e24b-62ac-4c01-a2d1-c079915e3cc5",
+  "lda": "6e9718af-d24e-4d68-a131-c8635b1cde56",
+  "pca": "519ce7ad-f2e0-4a3e-85ce-d3a97001ac79",
+  "extra": {
+    "kmeans": "661e21d8-7c80-48be-8235-e359014beceb",
+    "hierarchical": "be33e647-edb0-4730-97df-5466e11023f0",
+    "efa": "17497efb-f126-4443-842c-992cb09042a0"
+  }
+}

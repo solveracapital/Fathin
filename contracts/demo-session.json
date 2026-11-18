@@ -1,0 +1,9 @@
+{
+  "project_id": "55a5acb7-2b67-4ccc-889c-a25da43ecde0",
+  "run_ids": [
+    "ce6b893c-7796-4a16-a3bc-e5fd52d365e3",
+    "71a8b68d-0898-493f-8233-ab7ad0b547d3"
+  ],
+  "snapshot_id": "12077be6-6a07-4ffe-bd2b-9c3cbf6db908",
+  "server": "http://127.0.0.1:8000"
+}

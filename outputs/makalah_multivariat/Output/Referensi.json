@@ -1,0 +1,146 @@
+[
+  [
+    "S01",
+    "Belikov (2026)",
+    "Belikov, T. A. (2026). A system for predictive analysis of insolvency in small and medium-sized enterprises: Evidence from financial-ratio-based machine learning classifiers. Economy and Business: Theory and Practice, (8), 28–37. https://doi.org/10.24412/2411-0450-2026-8-28-37",
+    "https://journals.rcsi.science/2411-0450/article/view/465549",
+    "Data; Methodology; Tables 1–2",
+    "Teks lengkap HTML; seed tidak dicantumkan"
+  ],
+  [
+    "S02",
+    "UCI Machine Learning Repository (2020)",
+    "UCI Machine Learning Repository. (2020). Taiwanese bankruptcy prediction [Data set]. https://doi.org/10.24432/C5004D",
+    "https://archive.ics.uci.edu/dataset/572/taiwanese+bankruptcy+prediction",
+    "Dataset Information; Additional Variable Information; data.csv",
+    "Data kurasi; 1999–2009; CC BY 4.0"
+  ],
+  [
+    "S03",
+    "Jolliffe dan Cadima (2016)",
+    "Jolliffe, I. T., & Cadima, J. (2016). Principal component analysis: A review and recent developments. Philosophical Transactions of the Royal Society A, 374(2065), Article 20150202. https://doi.org/10.1098/rsta.2015.0202",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC4792409/",
+    "Bagian 2, dasar PCA",
+    "Teks lengkap diakses melalui unduhan HTML"
+  ],
+  [
+    "S04",
+    "NIST (n.d.)",
+    "National Institute of Standards and Technology. (n.d.). Principal components. In NIST/SEMATECH e-Handbook of statistical methods (Section 6.5.5). https://www.itl.nist.gov/div898/handbook/pmc/section5/pmc55.htm",
+    "https://www.itl.nist.gov/div898/handbook/pmc/section5/pmc55.htm",
+    "6.5.5, formulasi matriks dan standardisasi",
+    "Dokumentasi; istilah principal factors tidak disamakan dengan EFA"
+  ],
+  [
+    "S05",
+    "Costello dan Osborne (2005)",
+    "Costello, A. B., & Osborne, J. W. (2005). Best practices in exploratory factor analysis: Four recommendations for getting the most from your analysis. Practical Assessment, Research, and Evaluation, 10, Article 7. https://doi.org/10.7275/jyj1-4868",
+    "https://legacyfileshare.elsevier.com/promis_misc/teln-best-practices-in-exploratory-factor-analysis.pdf",
+    "PDF hlm. 2–6; tercetak 1–5; Extraction, Rotation, Sample Size",
+    "Teks lengkap PDF"
+  ],
+  [
+    "S06",
+    "Horn (1965)",
+    "Horn, J. L. (1965). A rationale and test for the number of factors in factor analysis. Psychometrika, 30, 179–185. https://doi.org/10.1007/BF02289447",
+    "https://link.springer.com/article/10.1007/BF02289447",
+    "Abstract",
+    "Abstrak dan metadata; hanya gagasan koreksi sampling melalui variabel acak"
+  ],
+  [
+    "S07",
+    "Murtagh dan Legendre (2011)",
+    "Murtagh, F., & Legendre, P. (2011). Ward’s hierarchical clustering method: Clustering criterion and agglomerative algorithm (arXiv:1111.6285, Version 2) [Preprint]. arXiv. https://arxiv.org/abs/1111.6285",
+    "https://arxiv.org/pdf/1111.6285",
+    "Bagian 2–4; PDF hlm. 2–15",
+    "Versi arXiv v2; tanggal versi mengikuti laman arXiv, bukan tanggal kompilasi PDF"
+  ],
+  [
+    "S08",
+    "Charrad et al. (2014)",
+    "Charrad, M., Ghazzali, N., Boiteau, V., & Niknafs, A. (2014). NbClust: An R package for determining the relevant number of clusters in a data set. Journal of Statistical Software, 61(6), 1–36. https://doi.org/10.18637/jss.v061.i06",
+    "https://www.jstatsoft.org/article/view/v061i06",
+    "Abstract; metadata artikel",
+    "Dukungan keberadaan berbagai indeks; paket tidak dijalankan"
+  ],
+  [
+    "S09",
+    "Saito dan Rehmsmeier (2015)",
+    "Saito, T., & Rehmsmeier, M. (2015). The precision-recall plot is more informative than the ROC plot when evaluating binary classifiers on imbalanced datasets. PLOS ONE, 10(3), Article e0118432. https://doi.org/10.1371/journal.pone.0118432",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC4349800/",
+    "Abstract; Results and Discussion",
+    "Artikel metodologis; bukan hasil empiris Taiwan"
+  ],
+  [
+    "S10",
+    "Cawley dan Talbot (2010)",
+    "Cawley, G. C., & Talbot, N. L. C. (2010). On over-fitting in model selection and subsequent selection bias in performance evaluation. Journal of Machine Learning Research, 11, 2079–2107. https://jmlr.org/papers/v11/cawley10a.html",
+    "https://jmlr.org/papers/volume11/cawley10a/cawley10a.pdf",
+    "Abstract; bagian model selection dan performance evaluation",
+    "Teks lengkap PDF tersedia"
+  ],
+  [
+    "S11",
+    "IBM (n.d.)",
+    "IBM. (n.d.). Discriminant analysis and DISCRIMINANT command reference. IBM SPSS Statistics 30 documentation. https://www.ibm.com/docs/en/spss-statistics/30.0.0?topic=reference-discriminant",
+    "https://www.ibm.com/docs/en/spss-statistics/30.0.0?topic=discriminant-statistics-subcommand-command",
+    "DISCRIMINANT; STATISTICS; Discriminant Analysis",
+    "Isi terindeks diperiksa; akses langsung sebagian 403; syntax belum dieksekusi"
+  ],
+  [
+    "S12",
+    "IAIS (2025)",
+    "International Association of Insurance Supervisors. (2025). Global insurance market report 2025. https://www.iais.org/uploads/2025/12/Global-Insurance-Market-Report-2025.pdf",
+    "https://www.iais.org/uploads/2025/12/Global-Insurance-Market-Report-2025.pdf",
+    "Bagian 3.2.3, tercetak hlm. 30, PDF hlm. 34",
+    "PDF lengkap; risiko investasi private credit"
+  ],
+  [
+    "S13",
+    "OECD (2026)",
+    "Organisation for Economic Co-operation and Development. (2026). Global insurance market trends 2026. OECD Publishing. https://doi.org/10.1787/c8be6585-en",
+    "https://www.oecd.org/en/publications/global-insurance-market-trends-2026_c8be6585-en.html",
+    "Abstract; Executive summary; terbit 2 November 2026",
+    "Konteks data 2025; bukan input model individual"
+  ],
+  [
+    "S14",
+    "Pedregosa et al. (2011)",
+    "Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M., & Duchesnay, E. (2011). Scikit-learn: Machine learning in Python. Journal of Machine Learning Research, 12, 2825–2830. https://jmlr.org/papers/v12/pedregosa11a.html",
+    "https://jmlr.org/papers/v12/pedregosa11a.html",
+    "Abstract; author metadata",
+    "Identitas perangkat lunak; tidak dijadikan dokumentasi versi 1.9.1"
+  ],
+  [
+    "S15",
+    "Ptak-Chmielewska (2021)",
+    "Ptak-Chmielewska, A. (2021). Bankruptcy prediction of small- and medium-sized enterprises in Poland based on the LDA and SVM methods. Statistics in Transition New Series, 22(1), 179–195. https://doi.org/10.21307/stattrans-2021-010",
+    "https://sit.stat.gov.pl/Article/202",
+    "Abstract; metadata",
+    "Hanya abstrak; tidak dipakai untuk angka hasil rinci"
+  ],
+  [
+    "S16",
+    "R Core Team (n.d.)",
+    "R Core Team. (n.d.). Factor analysis (factanal). R stats documentation. Retrieved November 4, 2026, from https://stat.ethz.ch/R-manual/R-devel/library/stats/html/factanal.html",
+    "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/factanal.html",
+    "Details, model; scores; maximum likelihood",
+    "Dokumentasi dinamis; EFA tidak dijalankan"
+  ],
+  [
+    "S17",
+    "scikit-learn (n.d.)",
+    "Scikit-learn developers. (n.d.). User guide (Version 1.9.1). Retrieved November 4, 2026, from https://scikit-learn.org/stable/user_guide.html",
+    "https://scikit-learn.org/stable/modules/lda_qda.html",
+    "LDA/QDA; Clustering; Metrics and scoring",
+    "Satu sumber dokumentasi; tidak dihitung terpisah tiap halaman"
+  ],
+  [
+    "S18",
+    "UCLA (n.d.)",
+    "University of California, Los Angeles, Office of Advanced Research Computing. (n.d.). Discriminant analysis: SPSS annotated output. https://stats.oarc.ucla.edu/spss/output/discriminant-analysis/",
+    "https://stats.oarc.ucla.edu/spss/output/discriminant-analysis/",
+    "Eigenvalues; Canonical correlation; Structure matrix",
+    "Contoh pendidikan; tidak mengatribusikan data Taiwan ke contoh UCLA"
+  ]
+]

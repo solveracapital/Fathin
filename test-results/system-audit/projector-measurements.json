@@ -1,0 +1,121 @@
+[
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_data_context",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_variables",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_procedure",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_formula",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_example",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_summary",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_confusion_matrix",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_precision_recall",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_decisions",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_reproduction",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "6e9718af-d24e-4d68-a131-c8635b1cde56_limitations",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "519ce7ad-f2e0-4a3e-85ce-d3a97001ac79_data_context",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "519ce7ad-f2e0-4a3e-85ce-d3a97001ac79_variables",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "519ce7ad-f2e0-4a3e-85ce-d3a97001ac79_formula",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "519ce7ad-f2e0-4a3e-85ce-d3a97001ac79_summary",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "519ce7ad-f2e0-4a3e-85ce-d3a97001ac79_scree",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  },
+  {
+    "id": "519ce7ad-f2e0-4a3e-85ce-d3a97001ac79_limitations",
+    "height": 768,
+    "width": 1366,
+    "viewportH": 768,
+    "viewportW": 1366
+  }
+]

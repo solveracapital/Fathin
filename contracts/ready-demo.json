@@ -1,0 +1,21 @@
+{
+  "project": "66824c47-cd16-4c65-bc9b-8168330cd159",
+  "snapshot": "c582fb22-d2db-4907-8eb4-e50a6244dfe4",
+  "sections": 132,
+  "url": "http://127.0.0.1:5173/present/c582fb22-d2db-4907-8eb4-e50a6244dfe4",
+  "runs": [
+    "0e2e72bd-1519-4c4a-9f20-0d869d12f349",
+    "84964c8f-ec84-42fb-8cdf-b9fb46282292",
+    "50215a69-4651-4d64-a3ec-10d0c6287893",
+    "03492da3-e7b0-42e1-bdac-2de912c8aedf",
+    "b6f4e922-11bc-42af-a34c-0b06d2f24113"
+  ],
+  "methods": [
+    "pca",
+    "efa",
+    "hierarchical",
+    "kmeans",
+    "lda"
+  ],
+  "synthetic": true
+}

@@ -102,6 +102,7 @@ class DraftInput(BaseModel):
     preprocessing:dict=Field(default_factory=dict)
     split:dict=Field(default_factory=dict)
     settings:dict=Field(default_factory=dict)
+    analysis_options:dict=Field(default_factory=dict)
 class RunInput(BaseModel):
     draft_id:str
     revision:int
@@ -130,11 +131,11 @@ def artifact(path,project_id,kind):
 @app.get('/api/v1/health')
 def health():
     from .assistant import configured
-    return dict(status='ok',python=sys.version.split()[0],R=service.r_health(),database=True,exporter=dict(pdf=True,table=True,plotly=True),ai_configured=configured(),session_token=TOKEN)
+    return dict(status='ok',python=sys.version.split()[0],statistical_engine='python',efa_engine='statsmodels',database=True,exporter=dict(pdf=True,table=True,plotly=True),ai_configured=configured(),session_token=TOKEN)
 @app.get('/api/v1/capabilities')
 def capabilities():
     from .assistant import configured
-    return dict(schema_version='1.0.0',methods={m:dict(available=(service.r_health() if m=='efa' else True)) for m in service.METHODS},limits=dict(file_bytes=50*1024**2,rows=100000,columns=200,hierarchical_rows=3000,silhouette_sample=2000),defaults=dict(seed=42,test_size=.3,prior='empirical',threshold=.5,k=3,basis='correlation'),features=dict(ai=configured(),ocr=False,group_temporal_oof=True))
+    return dict(schema_version='1.0.0',methods={m:dict(available=True) for m in service.METHODS},limits=dict(file_bytes=50*1024**2,rows=100000,columns=200,hierarchical_rows=3000,silhouette_sample=2000),defaults=dict(seed=42,test_size=.3,prior='empirical',threshold=.5,k=3,basis='correlation'),features=dict(ai=configured(),ocr=False,group_temporal_oof=True))
 @app.get('/api/v1/projects')
 def projects(offset:int=Query(0,ge=0),limit:int=Query(50,ge=1,le=200)):return page(db.listing('project'),offset,limit)
 @app.post('/api/v1/projects')
@@ -148,10 +149,10 @@ def update_project(id:str,body:ProjectInput):
 @synchronized
 def delete_project(id:str):
     db.get(id,'project')
-    for kind in ('run','draft','dataset','import','document','snapshot','scenario','artifact','job'):
+    for kind in ('deckplan','autoplan','suite','run','draft','dataset','import','document','snapshot','scenario','artifact','job'):
         for obj in db.listing(kind,id):
             if kind in ('run','job') and obj['status'] in ('running','queued'):raise HTTPException(409,'Tunggu atau batalkan pekerjaan aktif sebelum menghapus proyek.')
-    for kind in ('run','draft','dataset','import','document','snapshot','scenario','artifact','job'):
+    for kind in ('deckplan','autoplan','suite','run','draft','dataset','import','document','snapshot','scenario','artifact','job'):
         for obj in db.listing(kind,id):
             shutil.rmtree(db.folder(obj['id']),ignore_errors=True);db.remove(obj['id'])
     db.remove(id);return dict(deleted=True)
@@ -189,6 +190,77 @@ def patch_draft(id:str,body:RevisionInput):
     obj.update(updated,revision=obj['revision']+1);return db.put('draft',obj)
 @app.post('/api/v1/drafts/{id}/validate')
 def validate(id:str):return service.validate(db.get(id,'draft'))
+@app.post('/api/v1/drafts/{id}/validate-suite')
+def validate_suite(id:str):
+    from .suites import plan
+    return plan(db.get(id,'draft'))
+
+@app.post('/api/v1/analysis-suites',status_code=202)
+@synchronized
+def start_suite(body:RunInput):
+    from .suites import plan,view
+    cfg=db.get(body.draft_id,'draft')
+    for old in db.listing('suite',cfg['project_id']):
+        if old['idempotency_key']==body.idempotency_key:
+            if old['request']!=body.model_dump():raise HTTPException(409,'Kunci idempotency berbeda payload.')
+            return view(old)
+    if cfg['revision']!=body.revision:raise HTTPException(409,'Revision berubah.')
+    checked=plan(cfg);items=[]
+    for item in checked['analyses']:
+        if item['blocking']:
+            items.append(dict(method=item['method'],status='blocked',blocking=item['blocking'],warnings=item['warnings']));continue
+        child=draft(cfg['project_id'],DraftInput(**item['config']))
+        r=start(RunInput(draft_id=child['id'],revision=child['revision'],idempotency_key=body.idempotency_key+':'+item['method']))
+        items.append(dict(method=item['method'],status='queued',run_id=r['run_id'],warnings=item['warnings']))
+    obj=db.put('suite',dict(id=db.uid(),project_id=cfg['project_id'],draft_id=cfg['id'],created_at=db.now(),idempotency_key=body.idempotency_key,request=body.model_dump(),analyses=items))
+    return view(obj)
+
+@app.get('/api/v1/analysis-suites/{id}')
+def get_suite(id:str):
+    from .suites import view
+    return view(db.get(id,'suite'))
+
+@app.get('/api/v1/projects/{id}/analysis-suites')
+def suites(id:str):
+    from .suites import view
+    return page([view(s) for s in db.listing('suite',id)])
+
+@app.post('/api/v1/projects/{id}/automatic-plan')
+def automatic_plan(id:str,body:dict):
+    from .automatic import create_plan
+    d=db.get(body['dataset_version_id'],'dataset')
+    if d['project_id']!=id:raise ValueError('Dataset bukan milik proyek ini.')
+    return create_plan(d['id'])
+
+@app.get('/api/v1/automatic-plans/{id}')
+def get_automatic_plan(id:str):return db.get(id,'autoplan')
+
+@app.post('/api/v1/automatic-plans/{id}/start',status_code=202)
+@synchronized
+def start_automatic(id:str,body:dict):
+    from .suites import view
+    plan=db.get(id,'autoplan');key=body.get('idempotency_key')
+    if not isinstance(key,str) or not key:raise ValueError('Kunci pengiriman diperlukan.')
+    for old in db.listing('suite',plan['project_id']):
+        if old.get('automatic_plan_id')==id and old['idempotency_key']==key:return view(old)
+    items=[]
+    for a in plan['analyses']:
+        if a['status']=='explained':items.append({k:v for k,v in a.items() if k!='config'});continue
+        child=draft(plan['project_id'],DraftInput(**a['config']))
+        result=start(RunInput(draft_id=child['id'],revision=1,idempotency_key=id+':'+key+':'+a['method']))
+        items.append(dict(method=a['method'],title=a['title'],question=a['question'],explanation=a['explanation'],decisions=a['decisions'],run_id=result['run_id'],status='queued'))
+    suite=db.put('suite',dict(id=db.uid(),project_id=plan['project_id'],automatic_plan_id=id,created_at=db.now(),analyses=items,idempotency_key=key))
+    return view(suite)
+
+@app.get('/api/v1/analysis-suites/{id}/presentation')
+def automatic_presentation(id:str):
+    from .automatic import coverage_sections
+    from .suites import view
+    suite=view(db.get(id,'suite'));sections=[]
+    if suite.get('automatic_plan_id'):
+        plan=db.get(suite['automatic_plan_id'],'autoplan');sections.extend(coverage_sections(suite,plan))
+    for rid in suite['successful_run_ids']:sections.extend(presentation_sections(rid)['sections'])
+    return dict(suite_id=id,sections=sections)
 @app.post('/api/v1/runs',status_code=202)
 @synchronized
 def start(body:RunInput):
@@ -301,9 +373,37 @@ def assistant(id:str,body:dict):
         selection=select_evidence(body.get('question',''),[dict(id=m['id'],text=m['text'][:5000]) for m in matches])
         if selection['selected_ids']:matches=[m for m in matches if m['id'] in selection['selected_ids']]
     return dict(status='grounded_evidence',answer=' '.join(answer) or 'Kutipan sumber relevan tersedia pada document_evidence.',evidence_ids=evidence,document_evidence=matches,origin='deterministic',ai_selection=selection,ai_available=configured(),message='AI hanya memilih bukti; angka dan kutipan yang diterbitkan berasal langsung dari hasil dan dokumen.')
+@app.post('/api/v1/projects/{id}/presentation-plan')
+def presentation_plan(id:str,body:dict):
+    from .presentation_plan import create_plan
+    from .automatic import coverage_sections
+    from .suites import view
+    db.get(id,'project');run_ids=body.get('run_ids',[]);records=[];assessments=[];sid=body.get('automatic_suite_id')
+    if not isinstance(run_ids,list) or len(run_ids)!=len(set(run_ids)):raise ValueError('Run presentasi harus unik.')
+    if sid:
+        suite=view(db.get(sid,'suite'))
+        if suite['project_id']!=id or not suite.get('automatic_plan_id'):raise ValueError('Laporan otomatis bukan milik proyek ini.')
+        if not set(run_ids)<=set(suite['successful_run_ids']):raise ValueError('Run bukan hasil laporan otomatis yang dipilih.')
+        assessments=coverage_sections(suite,db.get(suite['automatic_plan_id'],'autoplan'))
+    for rid in run_ids:
+        run=require_result(rid)
+        if run['project_id']!=id:raise ValueError('Run bukan milik proyek ini.')
+        frame=pd.DataFrame(json.loads((db.folder(rid)/'frame.json').read_text(encoding='utf-8')))
+        records.append(dict(run=run,bundle=read_bundle(rid),raw=read_raw(rid),frame=frame,report_sections=presentation_sections(rid)['sections']))
+    if not records and not assessments:raise ValueError('Belum ada hasil atau keterangan kelayakan untuk presentasi.')
+    return create_plan(id,records,assessments,sid)
+
 @app.post('/api/v1/projects/{id}/snapshots')
 def snapshot(id:str,body:dict):
     db.get(id,'project');runs=[]
+    body={**body,'run_ids':body.get('run_ids',[])}
+    automatic=None
+    if body.get('automatic_suite_id'):
+        from .suites import view
+        automatic=view(db.get(body['automatic_suite_id'],'suite'))
+        if automatic['project_id']!=id or not automatic.get('automatic_plan_id'):raise ValueError('Laporan otomatis bukan milik proyek ini.')
+        if not set(body.get('run_ids',[]))<=set(automatic['successful_run_ids']):raise ValueError('Run bukan hasil penelaahan otomatis yang dipilih.')
+    if len(body.get('run_ids',[]))!=len(set(body.get('run_ids',[]))):raise ValueError('Run snapshot harus unik.')
     for rid in body.get('run_ids',[]):
         r=require_result(rid)
         if r['project_id']!=id:raise ValueError('Run bukan milik proyek.')
@@ -313,23 +413,46 @@ def snapshot(id:str,body:dict):
             if v['status'] in ('shown','available') and v['kind'] not in ('confusion_matrix','heatmap'):
                 bundle['visuals'][v['id']]['figure']=json.loads(figure(bundle,v['id']).to_json())
         runs.append(bundle)
-    if not runs:raise ValueError('Pilih minimal satu run selesai.')
+    if not runs and not automatic:raise ValueError('Pilih minimal satu run selesai.')
     scenarios=[]
     for sid in body.get('scenario_ids',[]):
         scenario=db.get(sid,'scenario')
         if scenario['project_id']!=id or scenario['parent_run_id'] not in body['run_ids']:raise ValueError('Skenario tidak sesuai run/proyek snapshot.')
         scenarios.append(scenario)
     canonical={s['id']:s for rid in body['run_ids'] for s in presentation_sections(rid)['sections']}
+    deck=None
+    if body.get('presentation_plan_id'):
+        deck=db.get(body['presentation_plan_id'],'deckplan')
+        if deck['project_id']!=id or set(deck['run_ids'])!=set(body['run_ids']) or deck.get('automatic_suite_id')!=body.get('automatic_suite_id'):raise ValueError('Rencana presentasi tidak sesuai proyek, run, atau laporan yang dipilih.')
+        canonical={s['id']:s for s in deck['sections']}
+    if automatic and not deck:
+        from .automatic import coverage_sections
+        canonical.update({s['id']:s for s in coverage_sections(automatic,db.get(automatic['automatic_plan_id'],'autoplan'))})
     sections=[]
     for section in body.get('ordered_sections',[]):
+        if deck:
+            original=canonical.get(section.get('id'))
+            if not original:raise ValueError('Bagian tidak berasal dari rencana presentasi ini.')
+            title=section.get('title',original['title'])
+            if not isinstance(title,str) or not title.strip() or len(title)>500:raise ValueError('Judul slide harus berupa teks 1–500 karakter.')
+            sections.append({**original,'title':title,'enabled':True})
+            continue
         if section.get('kind')=='content':
             if section.get('id') not in canonical:raise ValueError('Bagian presentasi tidak berasal dari run yang dipilih.')
             sections.append({**canonical[section['id']],'title':section.get('title',canonical[section['id']]['title'])})
         else:
             if section.get('kind') not in ('intro','methods','visual','limits','summary'):raise ValueError('Jenis bagian presentasi tidak sah.')
             if section.get('run_id') and section['run_id'] not in body['run_ids']:raise ValueError('Run bagian presentasi tidak sesuai snapshot.')
+            if section.get('kind') not in ('intro','methods') and not section.get('run_id'):raise ValueError('Bagian hasil harus merujuk run.')
+            if section.get('kind')=='visual':
+                target=next(b for b in runs if b['result']['run_id']==section['run_id'])
+                if not any(v['id']==section.get('visual_id') and v['status'] in ('shown','available') for v in target['result']['visual_manifest']):raise ValueError('Grafik tidak tersedia pada run yang dipilih.')
             sections.append(section)
-    return db.put('snapshot',dict(id=db.uid(),project_id=id,run_ids=body['run_ids'],scenario_ids=body.get('scenario_ids',[]),ordered_sections=sections,speaker_notes=body.get('speaker_notes',{}),created_at=db.now(),bundles=runs,scenarios=scenarios,source_hashes=[b['result']['provenance']['source_sha256'] for b in runs]))
+    if not sections and deck:raise ValueError('Pilih sedikitnya satu slide presentasi.')
+    if len({s['id'] for s in sections})!=len(sections):raise ValueError('Bagian presentasi harus unik.')
+    if not runs and not any(s.get('suite_id') for s in sections):raise ValueError('Pilih sedikitnya satu penjelasan untuk laporan ini.')
+    hashes=list(dict.fromkeys([b['result']['provenance']['source_sha256'] for b in runs]+[s['source_sha256'] for s in sections if s.get('source_sha256')]))
+    return db.put('snapshot',dict(id=db.uid(),project_id=id,run_ids=body['run_ids'],automatic_suite_id=body.get('automatic_suite_id'),presentation_plan_id=body.get('presentation_plan_id'),scenario_ids=body.get('scenario_ids',[]),ordered_sections=sections,speaker_notes=body.get('speaker_notes',{}),created_at=db.now(),bundles=runs,scenarios=scenarios,source_hashes=hashes))
 @app.get('/api/v1/snapshots/{id}')
 def get_snapshot(id:str):return db.get(id,'snapshot')
 
@@ -339,7 +462,10 @@ def export_work(job):
         if body.get('run_id'):
             r=require_result(body['run_id']);bundle=read_bundle(r['id']);project_id=r['project_id']
         else:
-            snap=db.get(body['snapshot_id'],'snapshot');bundle=json.loads(db.dumps(snap['bundles'][0]));project_id=snap['project_id'];r=None
+            snap=db.get(body['snapshot_id'],'snapshot');project_id=snap['project_id'];r=None
+            assessment_rows=[dict(question=s['title'],explanation=' '.join(s.get('paragraphs',[]))) for s in snap['ordered_sections'] if s.get('suite_id')]
+            bundle=json.loads(db.dumps(snap['bundles'][0])) if snap['bundles'] else dict(result=dict(narrative_blocks=[],metrics=[],visual_manifest=[],provenance={}),tables=dict(assessments=dict(rows=assessment_rows)),visuals={})
+            if assessment_rows:bundle['tables']['assessments']=dict(rows=assessment_rows)
             for index,extra in enumerate(snap['bundles'][1:],start=1):
                 bundle['result']['narrative_blocks'].extend(extra['result']['narrative_blocks'])
                 bundle['result']['metrics'].extend(extra['result']['metrics'])
@@ -348,24 +474,38 @@ def export_work(job):
                     key=str(index)+'_'+v['id'];bundle['visuals'][key]=extra['visuals'][v['id']];v=dict(v,id=key);bundle['result']['visual_manifest'].append(v)
             for scenario in snap['scenarios']:
                 bundle['result']['narrative_blocks'].append(dict(text=f"Skenario {scenario['kind']}: {db.dumps(scenario['result']['counts'])}"))
-        if fmt=='json':db.write_json(path,bundle)
+        if fmt=='json':db.write_json(path,bundle if r else snap)
         elif fmt in ('csv','xlsx'):
             def safe(v):return "'"+v if isinstance(v,str) and v.startswith(('=','+','-','@')) else v
             tables=bundle['tables'];selected=body.get('table_id') or next(iter(tables))
+            if not r and not body.get('table_id'):
+                tables['snapshot_metrics']=dict(rows=[dict(run_id=b['result']['run_id'],method=b['result']['method'],**m) for b in snap['bundles'] for m in b['result']['metrics']]);selected='snapshot_metrics' if snap['bundles'] else 'assessments'
             def flatten(rows):
                 out=[]
-                for row in rows:
+                for row_index,row in enumerate(rows):
                     if any(isinstance(v,(list,dict)) for v in row.values()):
                         for key,value in row.items():
                             text=db.dumps(value) if isinstance(value,(list,dict)) else str(value)
-                            for i in range(0,max(len(text),1),30000):out.append(dict(field=key,part=i//30000+1,value=safe(text[i:i+30000])))
+                            for i in range(0,max(len(text),1),30000):out.append(dict(row_index=row_index,field=key,part=i//30000+1,value=safe(text[i:i+30000])))
                     else:out.append({k:safe(v) for k,v in row.items()})
                 return out
             if fmt=='csv':pd.DataFrame(tables[selected]['rows']).map(safe).to_csv(path,index=False,encoding='utf-8-sig')
             else:
                 with pd.ExcelWriter(path,engine='openpyxl') as writer:
-                    for i,(name,t) in enumerate(tables.items()):pd.DataFrame(flatten(t['rows'])).to_excel(writer,sheet_name=(str(i)+'_'+name)[:31],index=False)
-                    pd.DataFrame([dict(key=k,value=db.dumps(v)) for k,v in bundle['result']['provenance'].items()]).to_excel(writer,sheet_name='provenance',index=False)
+                    manifest=[]
+                    for i,(name,t) in enumerate(tables.items()):
+                        sheet=(str(i)+'_'+name)[:31]
+                        pd.DataFrame(flatten(t['rows'])).to_excel(writer,sheet_name=sheet,index=False)
+                        owner=r['id'] if r else next((b['result']['run_id'] for j,b in enumerate(snap['bundles']) if name in b['tables'] and j==0 or j>0 and name.startswith(str(j)+'_') and name[len(str(j))+1:] in b['tables']),'all')
+                        manifest.append(dict(sheet=sheet,run_id=owner,table_id=t.get('id',name)))
+                    pd.DataFrame(manifest).to_excel(writer,sheet_name='table_manifest',index=False)
+                    sources=[bundle] if r else snap['bundles']
+                    provenance=[]
+                    for b in sources:
+                        for k,v in b['result']['provenance'].items():
+                            value=db.dumps(v)
+                            for part in range(0,max(len(value),1),30000):provenance.append(dict(run_id=b['result']['run_id'],key=k,part=part//30000+1,value=value[part:part+30000]))
+                    pd.DataFrame(provenance).to_excel(writer,sheet_name='provenance',index=False)
         elif fmt in ('png','svg'):
             from .charts import figure
             figure(bundle,body['visual_id']).write_image(str(path))
@@ -391,12 +531,14 @@ def export_work(job):
 async def export(body:dict):
     if body.get('format') not in ('json','csv','xlsx','pdf','zip','png','svg'):raise ValueError('Format ekspor tidak didukung.')
     if not body.get('idempotency_key'):raise ValueError('idempotency_key diperlukan.')
+    if bool(body.get('run_id'))==bool(body.get('snapshot_id')):raise ValueError('Pilih tepat satu sumber ekspor: run atau snapshot.')
+    if body['format'] in ('zip','png','svg') and not body.get('run_id'):raise ValueError('Format ini memerlukan satu run.')
     if body.get('run_id'):project_id=require_result(body['run_id'])['project_id']
     else:project_id=db.get(body['snapshot_id'],'snapshot')['project_id']
     for old in db.listing('job',project_id):
         if old.get('idempotency_key')==body['idempotency_key']:
             if old['request']!=body:raise HTTPException(409,'Payload berubah.')
-            return old
+            return dict(job_id=old['id'])
     job=db.put('job',dict(id=db.uid(),project_id=project_id,status='running',phase='exporting',progress=None,idempotency_key=body['idempotency_key'],request=body))
     asyncio.create_task(asyncio.to_thread(export_work,job));return dict(job_id=job['id'])
 @app.get('/api/v1/jobs/{id}')
@@ -412,7 +554,10 @@ def update_columns(id:str,body:dict):
         col=next((c for c in columns if c['id']==update['id']),None)
         if col is None or update.get('role',col['role']) not in roles:raise ValueError('Kolom atau peran tidak sah.')
         for key in ('role','unit','display_name'):
-            if key in update:col[key]=update[key]
+            if key in update:
+                value=update[key]
+                if key in ('unit','display_name') and not (value is None and key=='unit' or isinstance(value,str) and value.strip() and len(value)<=500):raise ValueError('Nama tampilan/satuan harus teks yang tidak kosong, maksimal 500 karakter.')
+                col[key]=value
     # Mapping creates a new dataset version; old runs keep their original mapping.
     new_id=db.uid();path=db.folder(new_id)/'data.json';shutil.copyfile(source['path'],path)
     source.update(id=new_id,path=str(path),columns=columns,parent_version_id=id,created_at=db.now())

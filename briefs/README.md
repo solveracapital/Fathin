@@ -1,5 +1,11 @@
 # Acuan eksekusi Multivariat Lab
 
+## Acuan aktif untuk alur yang disederhanakan
+
+Gunakan [ANALISIS_OTOMATIS.md](ANALISIS_OTOMATIS.md) sebagai acuan terbaru frontend/backend. Pengguna membaca penjelasan dan melanjutkan analisis; pemilihan fitur dan prosedur teknis tidak lagi menjadi langkah utama. Brief lain di folder ini mencatat rancangan awal dan perlu dibaca dalam konteks revisi tersebut.
+
+> Amendemen pengguna 22 November 2026: ketergantungan R dihapus. EFA memakai statsmodels Python dengan konvensi dan pengujian pada backend/README.md dan AUDIT_SISTEM.md. Keputusan ini mengungguli rincian R pada brief awal. Tema, lima metode, perhitungan, dan presentasi tetap dipertahankan.
+
 Disepakati sebagai rancangan implementasi pada 5 November 2026. Bahasa produk: Indonesia. Platform: aplikasi web lokal melalui browser, untuk pembelajaran, analisis, pitching, dan presentasi. Dokumen ini tidak menyatakan perangkat lunak sudah dibuat atau lolos pengujian.
 
 ## Urutan baca

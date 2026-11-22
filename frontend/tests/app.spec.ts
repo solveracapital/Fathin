@@ -25,27 +25,26 @@ test('LDA result, observation, threshold, export, and presentation',async({page}
  await page.getByRole('link',{name:'Ringkasan',exact:true}).click();
  await page.getByRole('button',{name:'Ekspor',exact:true}).click();await page.getByLabel('Format',{exact:true}).selectOption('csv');
  await page.getByRole('button',{name:'Siapkan berkas'}).click();await expect(page.getByRole('link',{name:'Unduh CSV'})).toBeVisible();await page.getByRole('button',{name:'Tutup',exact:true}).click();
- await page.getByRole('link',{name:'Presentasikan',exact:true}).click();await page.getByRole('button',{name:'Siapkan alur presentasi'}).click();
- await expect(page.getByRole('heading',{name:'Urutan cerita'})).toBeVisible();await page.getByRole('button',{name:'Simpan dan mulai presentasi'}).click();
+ await page.getByRole('link',{name:'Presentasikan',exact:true}).click();await page.getByRole('button',{name:'Susun materi presentasi'}).click();
+ await expect(page.getByRole('heading',{name:'Materi utama'})).toBeVisible();await page.getByRole('button',{name:'Simpan dan mulai presentasi'}).click();
  await expect(page).toHaveURL(/\/present\//);await expect(page.locator('.slide')).toBeVisible();
  await page.getByRole('button',{name:'Bagian berikutnya'}).click();await page.getByRole('button',{name:'Bagian berikutnya'}).click();
  await page.screenshot({path:'test-results/screenshots/presentation.png',fullPage:true});
  expect(errors).toEqual([]);
 });
-test('CSV upload, mapping and PCA wizard',async({page})=>{
+test('CSV upload continues directly to automatic analysis',async({page})=>{
  await page.goto(`/p/${project}/data`);
  await page.locator('input[type=file]').setInputFiles({name:'contoh.csv',mimeType:'text/csv',buffer:Buffer.from('ID,A,B,C\n001,1,2,2\n002,2,3,1\n003,3,5,4\n004,4,4,3\n005,5,6,2\n006,6,8,5\n')});
- await expect(page.getByRole('heading',{name:'Periksa pengaturan impor'})).toBeVisible();
- await page.getByRole('button',{name:'Konfirmasi impor'}).click();await expect(page.getByRole('heading',{name:'Peran dan definisi kolom'})).toBeVisible();
- await page.getByLabel('Peran ID',{exact:true}).selectOption('id');await page.getByRole('button',{name:'Simpan pemetaan'}).click();
- await expect(page.getByRole('heading',{name:'Data',exact:true})).toBeVisible();
- await page.getByRole('link',{name:'Rancang analisis',exact:true}).last().click();
- await expect(page.getByRole('heading',{name:'Pertanyaan apa yang ingin dijawab?'})).toBeVisible();await page.getByRole('button',{name:'Lanjut',exact:true}).click();
- for(const col of ['A','B','C'])await page.locator('.feature-list').getByRole('checkbox',{name:new RegExp('^'+col+'Skala|^'+col+' Skala')}).check().catch(async()=>{await page.locator('.feature-list label').filter({hasText:new RegExp('^'+col)}).getByRole('checkbox').check();});
- await page.getByRole('button',{name:'Lanjut',exact:true}).click();await page.getByRole('button',{name:'Lanjut',exact:true}).click();
- await expect(page.getByText('Konfigurasi lolos pemeriksaan awal.',{exact:false})).toBeVisible();await page.getByRole('button',{name:'Jalankan analisis',exact:true}).click();
- await expect(page.getByRole('heading',{name:'Apa yang ditemukan?'})).toBeVisible({timeout:60000});
- await expect(page.getByRole('heading',{name:'Kasus yang terdeteksi dan terlewat'})).toHaveCount(0);
+ await expect(page.getByRole('heading',{name:'Tinjau data yang diunggah'})).toBeVisible();
+ await page.getByRole('button',{name:'Konfirmasi impor'}).click();
+ await expect(page.getByRole('heading',{name:'Analisis otomatis',exact:true})).toBeVisible();
+ await expect(page.getByLabel('Jumlah kelompok K')).toHaveCount(0);
+ await page.getByRole('button',{name:'Lanjut',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Rencana analisis'})).toBeVisible();
+ await page.getByRole('button',{name:'Analisis otomatis',exact:true}).click();
+ await expect(page.getByRole('heading',{name:'Hasil dan penjelasan',exact:true})).toBeVisible();
+ await expect(page.getByText('Penelaahan selesai.',{exact:false})).toBeVisible({timeout:60000});
+ await expect(page.getByRole('link',{name:'Pilih isi presentasi'})).toBeVisible();
 });
 test('responsive layout, keyboard access and accessibility',async({page})=>{
  await page.goto(`/p/${project}/results/${runId}/summary`);await expect(page.getByRole('heading',{name:'Apa yang ditemukan?'})).toBeVisible();
@@ -57,7 +56,7 @@ test('responsive layout, keyboard access and accessibility',async({page})=>{
   if([390,1440].includes(width))await page.screenshot({path:`test-results/screenshots/results-${width}.png`,fullPage:true});
  }
  await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Buka navigasi'}).click();await expect(page.getByRole('dialog')).toBeVisible();await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(0);
- await page.goto('/');await page.setViewportSize({width:1440,height:900});await expect(page.getByRole('heading',{name:'Dari data menuju pemahaman.'})).toBeVisible();await page.screenshot({path:'test-results/screenshots/home.png',fullPage:true});
+ await page.goto('/');await expect(page.locator('.home-guide')).toHaveCount(0);await page.setViewportSize({width:1440,height:900});await expect(page.getByRole('heading',{name:'Analisis multivariat'})).toBeVisible();await page.screenshot({path:'test-results/screenshots/home.png',fullPage:true});
 });
 
 test('document reading, local evidence and unavailable AI',async({page})=>{

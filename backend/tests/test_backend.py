@@ -108,14 +108,8 @@ def test_import_rejects_formula():
     with pytest.raises(ValueError,match='Formula'):import_confirm(dict(path=str(p),filename='a.xlsx',project_id='none'),dict(sheet_name='Sheet'))
 
 def test_efa():
-    from backend.service import r_health
-    import subprocess
-    if not r_health():pytest.skip('R dependencies absent')
+    from backend.factors import efa_run
     rng=np.random.default_rng(9);factor=rng.normal(size=(400,2));L=np.array([[.8,.1],[.7,.1],[.9,.1],[.1,.8],[.1,.7],[.1,.9]])
     x=factor@L.T+rng.normal(size=(400,6))*.3
-    d=db.folder(db.uid());pd.DataFrame(x).to_csv(d/'x.csv',index=False)
-    db.write_json(d/'config.json',dict(data=str(d/'x.csv'),q=2,seed=42,extraction='pa',rotation='oblimin'))
-    p=subprocess.run(['Rscript',str(db.ROOT/'backend/efa.R'),str(d/'config.json'),str(d/'out.json')],capture_output=True,timeout=60)
-    assert p.returncode==0,p.stderr.decode(errors='replace')
-    r=json.loads((d/'out.json').read_text());assert min(r['uniqueness'])>0
+    r=efa_run(x,q=2);assert min(r['uniqueness'])>0
     assert np.array(r['pattern']).shape==(6,2)

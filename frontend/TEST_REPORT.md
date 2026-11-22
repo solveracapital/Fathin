@@ -1,5 +1,21 @@
 # Pengujian frontend
 
+## Status terbaru: bahasa netral dan presentasi inti
+
+**10 passed** dalam sekitar 1,8 menit pada Chrome Windows dengan API dan worker nyata. Pemeriksaan akhir seluruh 18 slide makalah juga menghasilkan 0 overflow dan 0 browser error; PDF akhir tepat 18 halaman.
+
+Jalur utama memakai keterangan deskriptif; blok panduan beranda yang ditunjuk pengguna dihapus. Editor kini memilih materi inti secara default, dengan daftar slide yang bisa dicentang dan lampiran nonaktif. Data sintetis lima metode menghasilkan 24 slide utama; contoh makalah asli menghasilkan 18 slide utama. Tes memeriksa bahwa dokumentasi teknis tidak terpilih, jumlah snapshot mengikuti materi inti, rumus dirender, tidak ada overflow pada proyektor, serta presentasi tanpa model tetap valid. Home diuji tanpa home-guide. Build TypeScript/Vite berhasil dan detector satu kali menghasilkan []. Bukti inspeksi editor desktop/mobile, seluruh 18 slide, dan PDF 18 halaman tersimpan di ../tmp/curated-audit/. Bagian berikut mencatat versi 143 bagian yang sekarang menjadi dokumentasi opsional, bukan pilihan presentasi awal.
+
+## Status terbaru: alur otomatis untuk presentasi, 22 November 2026
+
+**10 passed** pada Chrome Windows/Playwright, API dan worker statistik nyata; durasi sekitar 2,1 menit. Build TypeScript/Vite berhasil. Tes utama tidak mengisi satu pun input prosedur: data → Lanjut → Analisis otomatis → pilih isi presentasi. Kelima metode berhasil pada data sintetis yang sesuai. Laporan 143 bagian diperiksa seluruhnya pada 1366×768 tanpa overflow, menunggu KaTeX/font sebelum pengukuran; tidak ada katex-error. Penjelasan saja untuk dataset tanpa indikator juga berhasil menjadi presentasi, tanpa model palsu. Axe pada halaman penelaahan/hasil otomatis dan hasil rinci tidak menemukan pelanggaran pada cakupan tes. Pemeriksaan lebar 390/768/1366 untuk alur baru melengkapi pemeriksaan responsif halaman hasil sebelumnya.
+
+Pilihan isi disajikan per kelompok; judul/urutan/halaman/catatan berada dalam rincian opsional. Riwayat menonjolkan laporan, bukan daftar konfigurasi. Screenshot pada test-results/automatic-*.png, presentation-choices.png, dan multi-report/. Contoh makalah 141 bagian diekspor menjadi PDF 141 halaman; seluruh halaman dirender sebagai kontak dan 11 halaman dirender lebih besar di ../tmp/automatic-audit/. Rumus blok dan inline memakai KaTeX lokal pada browser dan PDF; hasil inspeksi tidak menunjukkan clipping pada sampel yang ditinjau. Detector dijalankan sekali pada frontend/src dengan exit 0 dan tanpa temuan keluaran. Batas pengujian tetap pada ../AUDIT_SISTEM.md. Bagian berikut adalah riwayat versi sebelumnya.
+
+## Status terbaru: revisi kesiapan tampil, 22 November 2026
+
+**9 passed** pada Chrome Windows melalui Playwright, menggunakan API dan worker nyata. Tes pilih semua kini mewajibkan **lima metode berhasil** tanpa pengecualian EFA. Laporan132bagian diperiksa pada1366×768 tanpa overflow; PDF132halaman mempertahankan jumlah/urutan dan dirender untuk QA. Build TypeScript/Vite dan detector berhasil. Launcher diuji pada cold start dan pembukaan ulang. Tidak memerlukan R. Detail serta batas pada ../AUDIT_SISTEM.md; catatan di bawah adalah riwayat versi sebelumnya.
+
 Tanggal 5 November2026. Build `npm run build --prefix frontend` berhasil dengan TypeScript strict dan Vite6.4.5. Grafik Plotly dan rumus KaTeX lazy-loaded dalam chunk terpisah; warning chunk Plotly>500kB tetap terlihat dan bukan kegagalan build.
 
 ## Browser end-to-end
@@ -23,3 +39,7 @@ Penghapusan/ubah nama proyek memakai API nyata dengan dialog konfirmasi; test su
 ## Audit sistem lanjutan
 
 Tiga tes tambahan memakai Taiwan LDA/PCA serta dataset sintetis enam indikator untuk k-means, hierarkis dan EFA. Tes memeriksa titik SVG PCA yang benar-benar tampil dan cocok persis dengan API, visual dan modal observasi metode lain, Axe tanpa pelanggaran pada cakupan, serta seluruh 17 bagian gabungan LDA/PCA pada1366×768. Nilai keanggotaan/skor observasi cocok dengan tabel. Bukti pada test-results/system-audit/ dan laporan menyeluruh ../AUDIT_SISTEM.md. Detector terakhir menghasilkan [].
+
+## Pengujian 22 November 2026
+
+9 passed menggunakan Chrome Windows yang sudah terpasang melalui Playwright. Browser Chromium bundel terdahulu tidak lagi ada; config memilih Chrome lokal bila tersedia. Tes baru mencakup checkbox/pilih semua, pengaturan mandiri, empat metode nyata, hasil suite, preseleksi presentasi, dan seluruh86halaman laporan pada1366×768 tanpa overflow. Sampel screenshot diperiksa langsung. EFA tidak dijalankan karena capability runtime R unavailable. PDF86halaman diperiksa urutan dan jumlahnya serta dirender untuk QA. Snapshot Taiwan terbaru90halaman. Detail ../AUDIT_SISTEM.md.

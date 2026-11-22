@@ -17,6 +17,7 @@ test.beforeAll(async({request})=>{
  for(let i=0;i<140;i++){const a=Math.sin(i*.41),b=Math.cos(i*.29);lines.push(names.map((_,j)=>((j<3?.8*a+.1*b:.1*a+.8*b)+.23*Math.sin(i*(j+1)*1.013)).toString()).join(','));}
  const imp=await(await request.post(`/api/v1/projects/${project}/imports`,{multipart:{file:{name:'indikator-sintetis.csv',mimeType:'text/csv',buffer:Buffer.from(lines.join('\n'))}}})).json();
  const ds=await(await request.post(`/api/v1/imports/${imp.import_id}/confirm`,{data:{decimal:'.',header_row:1}})).json();
+ expect((await(await request.get('/api/v1/capabilities')).json()).methods.efa.available).toBe(true);
  for(const method of ['kmeans','hierarchical','efa']){
   const d=await(await request.post(`/api/v1/projects/${project}/drafts`,{data:{dataset_version_id:ds.id,method,purpose:'Audit sintetis '+method,feature_ids:ds.columns.map((c:any)=>c.id),settings:method==='efa'?{q:2,extraction:'pa',rotation:'oblimin'}:{k:3},preprocessing:{scale:'standard'},split:{seed:42}}})).json();
   extra[method]=await finished(request,d.id);
@@ -36,7 +37,7 @@ test('PCA renders real SVG points and the saved scores match the plot',async({pa
 });
 test('all clustering and factor visuals have real data, labels and readable alternatives',async({page,request})=>{
  const browserErrors:string[]=[];page.on('pageerror',e=>browserErrors.push(e.message));
- for(const method of ['kmeans','hierarchical','efa']){
+ for(const method of Object.keys(extra)){
   await page.goto(`/p/${project}/results/${extra[method]}/summary`);
   await expect(page.getByRole('heading',{name:'Apa yang ditemukan?'})).toBeVisible();
   if(method==='efa'){await expect(page.getByRole('region',{name:'Loading faktor'})).toContainText('Likuiditas');}

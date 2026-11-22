@@ -32,7 +32,7 @@ def figure(bundle,id):
     elif kind=='line':
         for k in ('observed','simulated'):
             if k in data:fig.add_trace(go.Scatter(x=list(range(1,len(data[k])+1)),y=data[k],name='Data teramati' if k=='observed' else 'Batas acak 95%',line=dict(dash='solid' if k=='observed' else 'dash')))
-        fig.update_xaxes(title='Urutan faktor',dtick=1);fig.update_yaxes(title='Eigenvalue faktor bersama')
+        fig.update_xaxes(title='Urutan faktor',dtick=max(1,int(np.ceil(len(data['observed'])/15))));fig.update_yaxes(title='Eigenvalue faktor bersama')
     else:raise ValueError('Renderer visual belum tersedia.')
     n=bundle['result']['subset_definitions'].get(item['subset_id'],{}).get('n')
     fig.update_layout(title=item['title'],colorway=['#126B70','#365EA8','#A65B1A','#7D4F96','#64723C','#986058'],template='plotly_white',font=dict(family='Arial',size=16),width=1100,height=650,margin=dict(b=110),annotations=[dict(text=f"Subset: {item['subset_id']} | n={n} | Run: {bundle['result']['run_id']}<br>{item['reason_text']}",xref='paper',yref='paper',x=0,y=-.17,showarrow=False,xanchor='left',font=dict(size=11))])

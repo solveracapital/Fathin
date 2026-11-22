@@ -1,64 +1,64 @@
 # Backend Multivariat Lab
 
-Backend lokal Python/FastAPI dengan EFA melalui R. Jalankan semua command dari root proyek. Runtime data pada `var/`; sumber makalah pada `outputs/makalah_multivariat/` tidak diubah. Jangan menjalankan dua server bersamaan pada runtime directory yang sama.
+Versi aktif memakai Python saja. PCA, LDA, k-means, dan hierarkis menggunakan NumPy/SciPy/scikit-learn; EFA menggunakan statsmodels0.15.0. Tidak memerlukan R, Rscript, psych, atau GPArotation.
 
-## Menjalankan di Windows
+## Mulai
 
-Lingkungan Python dan paket R sudah dipasang di komputer ini. Mulai server:
+Dari root proyek, jalankan `scripts/start-app.ps1` atau klik `Buka Multivariat Lab.cmd`. Launcher memeriksa server, menjalankan layanan lokal, dan membuka browser. Mode pemeriksaan tanpa membuka browser: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-app.ps1 -NoBrowser`. Server backend saja: `scripts/start-backend.ps1`.
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/start-backend.ps1
+Untuk instalasi ulang: Python3.13 dan Node.js diperlukan. Jalankan `scripts/setup-backend.ps1`, lalu `npm ci --prefix frontend`. Lock dependensi Python ada di requirements.lock.txt, frontend di package-lock.json. Aplikasi tidak memasang dependensi saat analisis berjalan. Grafik ekspor memerlukan Chrome/Edge lokal; launcher tidak mengunduh browser.
+
+Data kerja berada di var/; sumber makalah outputs/makalah_multivariat/ tidak diubah. Hanya satu backend boleh memakai direktori runtime yang sama. Layanan di127.0.0.1:8000, frontend di127.0.0.1:5173. Ini aplikasi lokal satu pengguna, bukan layanan publik multiuser.
+
+## Alur API
+
+Alur utama frontend: `POST /projects/{id}/automatic-plan` dengan dataset_version_id, baca rencana beku, kemudian `POST /automatic-plans/{id}/start` dengan idempotency_key. Poll `/analysis-suites/{id}` dan ambil `/analysis-suites/{id}/presentation`. Snapshot menerima automatic_suite_id, run_ids, dan ordered_sections. Metode yang belum layak memiliki status explained dan bagian laporan tersendiri, tanpa run/model rekaan. Snapshot berisi penjelasan saja juga dapat diekspor ke PDF/JSON/CSV/XLSX. Kebijakan lengkap ada pada ../briefs/ANALISIS_OTOMATIS.md. Endpoint draft/prosedur di bawah dipertahankan untuk kompatibilitas dan penelusuran teknis; bukan alur yang perlu diatur pengguna.
+
+OpenAPI aktual: contracts/openapi.json dan /docs. GET /api/v1/health mengembalikan session_token; browser mengirim X-Session-Token pada mutation. Token lokal bukan API key AI.
+
+1. POST /projects, unggah CSV/XLSX ke /projects/{id}/imports, lalu /imports/{id}/confirm. Contoh makalah melalui /projects/{id}/case-study.
+2. Mapping tipe dan role membuat versi dataset baru. Angka dan teks label dibedakan; identitas dengan leading zero dipertahankan sebagai teks. Workbook berformula ditolak: gunakan values-only.
+3. POST /projects/{id}/drafts. Draft berisi dataset_version_id, method, feature_ids, purpose, preprocessing, settings, split, target_id/positive_label untuk LDA.
+4. POST /drafts/{id}/validate atau validate-suite. Pemeriksaan data/model dapat menghasilkan blocking. Kelulusan awal bukan bukti semua asumsi terpenuhi; fitting memeriksa solusi numerik kembali.
+5. POST /runs memakai draft_id, revision, idempotency_key; poll /runs/{id}. Worker terpisah mendukung cancel dan timeout300detik. Tidak menampilkan progress persen rekaan.
+6. GET /runs/{id}/results, tables/{id}, visuals/{id}, observations/{row_id}, presentation. Semua memakai hasil versi run yang sama.
+7. Snapshot membekukan bundles, ordered_sections, catatan dan grafik. Rujukan run/grafik divalidasi sebelum disimpan. Snapshot lama tidak berubah setelah pembaruan mesin atau laporan.
+8. POST /exports, poll /jobs/{id}, unduh artifact.download_url. PDF mengikuti bagian dan urutan snapshot; JSON snapshot mempertahankan seluruh bundles, bagian dan notes. CSV snapshot default berisi metrik semua run dengan ID/metode; XLSX memuat seluruh tabel dan provenance setiap run. ZIP/PNG/SVG memerlukan satu run. Respons idempotency selalu memiliki job_id yang sama.
+
+## Beberapa pertanyaan sekaligus
+
+analysis_options berisi key metode dengan value preprocessing/settings/split. Dataset, fitur, dan target dipakai bersama; parameter tiap metode dibekukan sendiri. Contoh:
+
+```json
+{"analysis_options":{"pca":{"settings":{"basis":"correlation","target":0.8}},"efa":{"settings":{"extraction":"pa","rotation":"oblimin"}},"kmeans":{"preprocessing":{"scale":"standard"},"settings":{"k":3},"split":{"seed":42}}}}
 ```
 
-Dokumentasi interaktif: http://127.0.0.1:8000/docs
+POST /drafts/{id}/validate-suite mengembalikan hasil validasi per metode. POST /analysis-suites memakai RunInput; GET /analysis-suites/{id} mengembalikan status dinamis dan successful_run_ids. Riwayat melalui GET /projects/{id}/analysis-suites. Metode blocked tidak dijalankan; metode gagal tidak menerbitkan angka palsu atau membatalkan hasil lain. Pekerjaan dijalankan bergiliran untuk mengendalikan memori.
 
-Untuk instalasi ulang dengan Python 3.13 dan R pada PATH:
+## Konvensi numerik
 
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/setup-backend.ps1
-backend/.venv/Scripts/python.exe -m pytest backend/tests -q
-backend/.venv/Scripts/python.exe -m backend.publish_contracts
-```
+- LDA biner memakai pooled covariance W/(n−2), prior empirical/equal/custom, ambang0..1. Pengolahan dan pemilihan ambang OOF memakai train/foldtrain saja. Group/temporal split menjaga kendala masing-masing; gap temporal bukan test. Keanggotaan dan urutan split disimpan. Reproduksi OOF Taiwan mengembalikan urutan seed42 hanya sesudah membership cocok persis.
+- PCA basis correlation/covariance dengan pemusatan, arah deterministik, PVE dan skor. PCA train memerlukan split.column_id dan settings.subset=train. Loading adalah korelasi indikator-komponen, berbeda dari arah.
+- EFA principal axis (awalSMC) atau maximum likelihood, rotasi none/varimax/oblimin(quartimin). Pemeriksaan konvergensi, jumlah faktor, positive definiteness, keunikan positif dan invariansi kovarians rotasi dilakukan sebelum penerbitan hasil. Skor regresi = Z solve(R,L Phi). KMO dan Bartlett dihitung dari korelasi aktual. Tidak melakukan smoothing, clipping Heywood, atau imputasi tersembunyi.
+- EFA otomatis: common-factor parallel analysis500simulasi, spektrum reduced correlation diagonalSMC, batas persentil95, retensi berurutan dari faktor pertama. NullGaussian memakai Wishart Bartlett dengan df=n−1, setara distribusi korelasi sampel dari n observasi independen tanpa mengurangi n. Ini kebijakan Python yang dicatat, bukan klaim identik dengan seluruh default psych. Jika tidak ada faktor yang didukung, hasil tidak dipaksakan. Jumlah manual tidak membuat grafik simulasi rekaan.
+- K-means: k-means++,20inisialisasi, max300iterasi, seed tersimpan, Euclidean. Hierarkis: Ward/average/complete/single; Ward wajibEuclidean. Hierarkis full maksimal3000baris; tidak melakukan sampling diam-diam. Silhouette sampel deterministik maksimal2000dengan jumlah sampel dicatat. Nomor kelompok pengguna mulai1 dan bukan peringkat risiko.
 
-Lock Python aktual ada di requirements.lock.txt. `contracts/r-versions.json` merekam versi R yang diuji; instalasi ulang CRAN dapat memperoleh versi berbeda sehingga uji EFA harus diulang. EFA membutuhkan psych, GPArotation, jsonlite. Ekspor gambar memerlukan Chrome/Edge yang didukung Kaleido; sudah diuji pada host ini. Dependency tidak otomatis diunduh saat server start.
+## Visual dan laporan
 
-## Alur integrasi frontend
+Presentasi utama kini terpisah dari laporan teknis lengkap. POST /projects/{id}/presentation-plan menerima run_ids serta automatic_suite_id opsional, menyimpan deckplan dengan section core/appendix, lalu snapshot menyertakan presentation_plan_id. Server memeriksa kesesuaian proyek/run/suite serta mengambil konten ilmiah canonical dari rencana; paragraf browser tidak menjadi sumber angka. Hanya core dipilih awal. Contoh makalah: 18 slide utama dengan LDA/PCA; hasil EFA/gerombol dan dokumentasi rinci opsional. Endpoint /runs/{id}/presentation tetap menyediakan laporan lengkap. Demo aktif: ../contracts/curated-demo.json.
 
-1. GET `/api/v1/health`, simpan session_token di memori. Request browser yang mengubah data harus mengirim `X-Session-Token`. CORS default hanya localhost/127.0.0.1:5173. Token jangan disimpan sebagai API key AI.
-2. POST `/api/v1/projects` dengan `{ "name":"Presentasi", "description":"" }`.
-3. POST `/api/v1/projects/{id}/case-study` untuk contoh. Response berisi dataset_id dan dua draft_ids (LDA lalu PCA). Ini memasang data, tidak mengarang hasil.
-4. POST `/api/v1/drafts/{id}/validate`; selesaikan blocking.
-5. POST `/api/v1/runs` dengan draft_id,revision:1,idempotency_key unik. Poll GET `/api/v1/runs/{run_id}` hingga terminal; progress null berarti tidak tersedia, bukan0%.
-6. GET results, tables, visuals, observations sesuai OpenAPI. Untuk Taiwan gunakan row_id `TW03598` pada endpoint observasi.
-7. POST scenarios dengan kind,threshold,subset,idempotency_key. `oof_threshold` membaca hasil pemilihan OOF run; untuk run yang belum menghitung OOF, duplikasi konfigurasi dan jalankan ulang dengan settings.oof=true.
-8. GET `/api/v1/runs/{id}/presentation` untuk bagian data/prosedur/rumus/contoh/evaluasi/batas yang berasal dari hasil tersimpan. POST snapshot dengan run_ids/scenario_ids. JSON snapshot sudah berisi bundle hasil yang dibekukan, sehingga presentasi tidak memerlukan AI.
-9. POST exports dengan run_id atau snapshot_id,format,idempotency_key; poll jobs; unduh artifact.download_url. Format json,csv,xlsx,pdf,zip,png,svg. PNG/SVG wajib visual_id. CSV dapat memilih table_id.
+Manifest menentukan visual yang layak; frontend tidak memaksa kurva dua kelas pada subset satu kelas atau scatter2D pada fitur tunggal. Proyeksi PCA opsional mencantumkan varians dua sumbu serta jumlah titik tampilan. Profil kelompok dengan >8indikator atau >12kelompok menjadi opsional; laporan lengkap memakai tabel lanjutan. Loading faktor padat tidak dipaksakan menjadi satu slide. Seluruh indikator, matriks, dan koefisien tetap tersedia. Tidak ada batas jumlah halaman laporan.
 
-Impor baru: upload multipart field `file` ke imports, lalu confirm dengan `sheet_name` (XLSX), header_row berbasis1, decimal `.`/`,`, delimiter dan encoding (CSV). Kode kolom `c0,c1,...` stabil meskipun nama duplikat. Jika kolom ID numerik tanpa nama ID, tetapkan column_types.cN='text' saat confirm. Formula XLSX ditolak; gunakan values-only. PATCH datasets/{id}/columns menghasilkan versi baru untuk role/unit/display_name; gunakan ID versi baru pada draft berikutnya. Metadata versi lama tetap untuk run lama.
+Mode otomatis menentukan K dengan silhouette pada calon 2–6 yang memenuhi syarat dan sampel tetap maksimal 800 observasi; K-means dan Ward dinilai dengan algoritmenya sendiri. Hierarki otomatis di atas 1.000 baris memakai sampel tetap 1.000 observasi dengan ID/baris asal dan cakupan dicatat eksplisit. Jalur API manual tetap memiliki batas 3.000 untuk hierarki penuh. LDA melindungi test dari imputasi/pemilihan kolom train, mempertahankan split sumber makalah hanya jika hash sumber cocok, dan mempertimbangkan entitas/waktu yang dikenali. Data longitudinal gabungan atau makna label ambigu dijelaskan tanpa mengklaim evaluasi acak yang aman.
 
-Draft: method lda/pca/efa/kmeans/hierarchical; feature_ids; target_id dan positive_label untuk LDA. positive_label boleh nilai langsung atau `{value:1,type:"number"}`. Nilai angka dan string harus sama tipe dengan dataset. preprocessing `{missing:"error|median|drop",scale:"none|standard|robust",log:false}`. Clustering default standard jika scale tidak ditentukan. PCA mempunyai standardisasi korelasi sendiri. Jangan menambahkan standardisasi kedua tanpa kebutuhan.
+KaTeX dan font lokal digunakan pada layar. PDF merender notasi yang sama melalui Node.js dan Chrome/Edge/Chromium lokal; notasi blok serta notasi inline tidak dicetak sebagai kode LaTeX. Aset rumus disimpan dalam cache lokal. Instalasi ulang untuk PDF memerlukan dependensi frontend termasuk playwright-core, selain dependensi Python.
 
-Split: stratified_random(default),saved_membership dengan column_id,group dengan column_id entitas,temporal dengan column_id waktu/cutoff/gap_days. Semua split menyimpan indeks aktual. Split temporal mencakup waktu<cutoff-gap ke train dan>=cutoff ke test; baris dalam gap tidak dipakai evaluasi. Group/temporal OOF menjaga kendala; early temporal train yang belum dapat diberi prediksi OOF tidak ikut pemilihan ambang dan n evaluasi OOF menunjukkan coverage aktual.
+## Dokumen dan AI
 
-Settings LDA: prior empirical/equal/array dua angka positif sum1,threshold0..1,oof boolean,folds default5,oof_estimator pooled default. Contoh Taiwan reconstruct_order=true memverifikasi membership dengan hasil seed42 sebelum memakai urutan train aslinya. OOF contoh tetap pooled; opsi sklearn_svd tersedia sebagai eksperimen eksplisit, bukan reproduksi makalah. Koefisien tersimpan pada skala setelah preprocessing; trace memuat input asli dan transformasi.
+DOCX/PDF teks diurai lokal, isinya sumber data dan bukan instruksi sistem. OCR tidak disediakan. Pencarian kutipan dan narasi deterministik tidak memerlukan AI. Provider opsional memakai AI_BASE_URL, AI_MODEL, AI_API_KEY dan persetujuan send_policy=summary_and_quotes; hanya memilih ID bukti terverifikasi. Dataset mentah tidak dikirim. Provider aktual memerlukan key pengguna dan belum divalidasi pada semua penyedia.
 
-Settings PCA: basis correlation/covariance,q opsional,target default0.8,subset train opsional memerlukan split.column_id. Settings EFA: extraction pa/ml,rotation oblimin/varimax/none,q opsional; tanpa q menjalankan common-factor parallel analysis500simulasi. Settings cluster: k,metric,linkage untuk hierarchical; batas full3000baris dan silhouette sample2000.
+## Pengujian dan batas
 
-## AI dan dokumen
+Jalankan `backend/.venv/Scripts/python.exe -m pytest backend/tests -q --tb=short`, build frontend, dan tes browser dengan server aktif. Tidak ada tes EFA yang dilewati karena R. Pengujian EFA memakai matriks faktor populasi yang diketahui, seluruh enam kombinasi ekstraksi/rotasi, skor/KMO/Bartlett independen, retensi dan seed, serta penolakan solusi tidak layak.
 
-DOCX/PDF teks diurai lokal. Endpoint proposal mendeteksi kandidat metode dan bukti, tanpa otomatis memilih fitur atau menjalankan analisis. Assistant menyediakan narasi hasil dan retrieval kutipan tanpa jaringan. Jika AI_BASE_URL,AI_MODEL,AI_API_KEY disetel dan request `send_policy:"summary_and_quotes"`, model boleh memilih ID bukti relevan. Teks hasil yang dipublikasikan tetap kutipan/narasi terverifikasi. Ini pembatasan sengaja: belum menyediakan esai AI bebas atau perubahan konfigurasi otomatis. Jangan mengirim raw dataset ke model. API provider harus kompatibel endpoint chat/completions; belum ada API key pengguna untuk uji provider langsung.
-
-## Batas yang harus diketahui agent frontend
-
-- Frontend tersedia di http://127.0.0.1:5173. Profil/impor/dokumen lokal saat ini synchronous pada request (parsing dokumen memakai thread); run statistik asynchronous dan cancellable. Export asynchronous melalui thread, belum cancel terpisah.
-- PDF memakai ReportLab dengan grafik Plotly aktual, bukan renderer HTML/KaTeX. Rumus mengikuti metode. PDF snapshot mengikuti seluruh bagian yang dipilih dan urutannya, termasuk judul yang diedit. Speaker notes disimpan di JSON snapshot dan tidak dicetak untuk audiens. PDF bukan salinan piksel slide atau editor slide bebas.
-- SVG/PNG renderer tersedia untuk jenis visual yang dihasilkan sekarang. Biplot interaktif, diagram faktor, histogram profil, elbow pencarian K, dan visual seed sensitivity belum diterbitkan. Backend tidak memaksa visual yang belum dihitung. PCA menyediakan score projection opsional berlabel; cluster1fitur hanya profil.
-- Output profil sudah menyajikan distribusi dasar; endpoint rows mendukung pagination/column selection/sort, belum ekspresi filter umum. Run konfigurasi tidak diubah oleh preview sort.
-- Belum ada scoring model tersimpan pada data eksternal; input baru harus dilatih sebagai analisis baru. Dataset Taiwan tidak dianggap kompatibel dengan rasio mentah eksternal.
-- ZIP berisi data/config/raw/split tersirat pada raw/versions/checksum. Reproduksi: `python -m backend.reproduce path.zip` menggunakan backend ini. Bukan paket instalasi aplikasi mandiri.
-- Table endpoints membaca bundle JSON lokal sebelum pagination; ini benar secara respons tetapi belum database-columnar streaming untuk dataset besar. Batas operasional100k×200 bukan benchmark kelayakan semua kombinasi.
-- Role/type mapping, run/result schema, dan API aktual adalah acuan integrasi. Brief tetap target produk; bagian yang berbeda di atas adalah gap implementasi nyata, bukan fitur selesai.
-
-## Pengujian
-
-Jalankan pytest sebelum integrasi. Numerical tests meliputi Taiwan utama/OOF/prior sama, PCA eigen/reconstruction, affine invariance LDA, test leakage, undefined metrics, clustering/inertia, EFA sintetis R, group/time split, kontrak visual, penolakan formula/arsip, allowlist bukti AI. Integration test menjalankan worker subprocess, impor contoh, skenario dan ekspor. Ini tidak membuktikan seluruh dataset mungkin atau validitas penggunaan finansial nyata. Detail hasil aktual pada TEST_REPORT.md.
+Laporan terbaru pada TEST_REPORT.md dan ../AUDIT_SISTEM.md. Tidak ada jaminan kesalahan nol untuk seluruh dataset. Asumsi model, kualitas/independensi data, validasi eksternal, dan perangkat fisik tetap memerlukan penilaian sesuai penggunaan. Kasus Taiwan adalah reproduksi parsial; tidak ada klaim eksekusi SPSS atau model premi/cadangan aktuaria operasional. Fitur di luar lingkup yang tidak disediakan: OCR, scoring eksternal model lama, esai AI bebas, editor slide canvas, dan deployment multiuser.

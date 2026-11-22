@@ -5,17 +5,10 @@ import numpy as np
 from . import storage as db
 from .statistics import lda_run,pca_run,cluster_run,transform_fit
 from .results import build
+from .factors import efa_run,prepare_factors
 
 METHODS=['lda','pca','efa','kmeans','hierarchical']
-def versions():return {p:importlib.metadata.version(p) for p in ['numpy','scipy','pandas','scikit-learn','fastapi']}
-def r_health():
-    path=shutil.which('Rscript')
-    if not path:return False
-    try:
-        p=subprocess.run([path,'-e',"cat(all(sapply(c('psych','GPArotation','jsonlite'),requireNamespace,quietly=TRUE)))"],capture_output=True,timeout=15)
-        return p.returncode==0 and b'TRUE' in p.stdout
-    except (OSError,subprocess.TimeoutExpired):return False
-
+def versions():return {p:importlib.metadata.version(p) for p in ['numpy','scipy','pandas','scikit-learn','fastapi','statsmodels']}
 def guard_archive(data):
     with zipfile.ZipFile(io.BytesIO(data)) as z:
         if sum(i.file_size for i in z.infolist())>250*1024**2:raise ValueError('Arsip expanded melebihi 250 MiB.')
@@ -106,8 +99,14 @@ def validate(config):
     errors=[];warnings=[]
     try:
         d=db.get(config['dataset_version_id'],'dataset');f=dataframe(d);features=config['feature_ids'];method=config['method'];s=config.get('settings',{});split=config.get('split',{})
+        if s.get('sample_row_ids'):
+            ids=s['sample_row_ids']
+            if len(ids)!=len(set(ids)) or not set(ids)<=set(f['_row_id'].astype(str)):raise ValueError('Identitas sampel tidak sah.')
+            f=f[f['_row_id'].astype(str).isin(ids)].reset_index(drop=True)
         if config.get('preprocessing',{}).get('missing')=='drop':f=f.dropna(subset=features).reset_index(drop=True)
         if len(f)<3:raise ValueError('Minimal tiga baris eligible diperlukan.')
+        seed=split.get('seed',42)
+        if type(seed) is not int or not 0<=seed<=2147483647:raise ValueError('Seed harus bilangan bulat 0 sampai 2147483647.')
         for key in ('k','q','folds'):
             if key in s and s[key] is not None and (type(s[key]) is not int or s[key]<1):raise ValueError(f'{key} harus bilangan bulat positif.')
         if 'folds' in s and s['folds']<2:raise ValueError('OOF minimal dua fold.')
@@ -147,7 +146,17 @@ def validate(config):
                 folds=min(s.get('folds',5),int(np.bincount(yy[tr]).min()))
                 if folds<2:raise ValueError('Jumlah fold OOF tidak sah.')
                 if folds<s.get('folds',5):warnings.append(dict(code='REDUCED_FOLDS',message=f'OOF menggunakan {folds} fold karena jumlah kelas minoritas.'))
-        if method=='efa' and not r_health():raise ValueError('R/psych/GPArotation/jsonlite belum tersedia.')
+        if method=='efa' and (len(features)<3 or len(f)<=len(features)):raise ValueError('EFA memerlukan minimal 3 indikator dan observasi lebih banyak daripada indikator.')
+        if method=='efa':
+            prepared,_=transform_fit(x,config.get('preprocessing',{}))
+            _,factor_count,_=prepare_factors(prepared,s.get('q'),seed)
+            if s.get('q') is None:warnings.append(dict(code='AUTO_FACTORS',message=f'Parallel analysis memilih {factor_count} faktor; konvergensi dan keunikan tetap diperiksa saat estimasi.'))
+        if method in ('kmeans','hierarchical'):
+            k=s.get('k',3)
+            if not 2<=k<len(f) or k>len(np.unique(x,axis=0)):raise ValueError('K harus minimal 2, kurang dari jumlah observasi, dan tidak melebihi titik unik.')
+            metric=s.get('metric','euclidean')
+            if method=='kmeans' and metric!='euclidean':raise ValueError('K-means hanya menggunakan Euclidean.')
+            if method=='hierarchical' and (s.get('linkage','ward') not in ('ward','average','complete','single') or metric not in ('euclidean','cityblock','manhattan')):raise ValueError('Linkage atau jarak tidak didukung.')
         if method=='hierarchical' and len(f)>3000:raise ValueError('Batas hierarchical adalah 3000 observasi.')
         if method=='hierarchical' and s.get('linkage','ward')=='ward' and s.get('metric','euclidean')!='euclidean':raise ValueError('Ward hanya Euclidean.')
         if len(features)>20:warnings.append(dict(code='LARGE_FEATURE_SET',message='Heatmap lengkap tidak ditampilkan default.'))
@@ -156,10 +165,15 @@ def validate(config):
 
 def execute(run):
     cfg=run['config'];d=db.get(cfg['dataset_version_id'],'dataset');f=dataframe(d);features=cfg['feature_ids'];settings=cfg.get('settings',{});options=cfg.get('preprocessing',{})
+    source_n=len(f)
+    if settings.get('sample_row_ids'):f=f[f['_row_id'].astype(str).isin(settings['sample_row_ids'])].reset_index(drop=True)
     if options.get('missing')=='drop':f=f.dropna(subset=features).reset_index(drop=True)
     run['provenance']=dict(source_sha256=d['source_sha256'],dataset_version_id=d['id'],config_hash=db.digest(db.dumps(cfg).encode()),engine_versions=versions(),visual_policy_version='1.0.0')
     run['provenance']['feature_labels']=[next((c.get('display_name',c.get('source_name',name)) for c in d['columns'] if c['id']==name),name) for name in features]
     run['provenance']['feature_ids']=features
+    run['provenance']['source_row_count']=source_n
+    run['provenance']['automatic_decisions']=settings.get('automatic_decisions',[])
+    if settings.get('sample_row_ids'):run['provenance']['sampling']=dict(population_n=source_n,used_n=len(f),seed=42,strategy='fixed_random_source_rows')
     if cfg['method']=='lda':
         positive=cfg.get('positive_label');positive=positive.get('value') if isinstance(positive,dict) else positive
         raw=lda_run(f,features,cfg['target_id'],positive,options,cfg.get('split',{}),settings)
@@ -173,10 +187,11 @@ def execute(run):
         x,t=transform_fit(f[features].to_numpy(float),options)
         if cfg['method']=='pca':raw=pca_run(x,settings.get('basis','correlation'),settings.get('q'),settings.get('target',.8))
         elif cfg['method']=='efa':
-            path=db.folder(run['id']);pd.DataFrame(x).to_csv(path/'efa.csv',index=False)
-            db.write_json(path/'efa_config.json',dict(data=str(path/'efa.csv'),q=settings.get('q'),seed=42,extraction=settings.get('extraction','pa'),rotation=settings.get('rotation','oblimin')))
-            subprocess.run([shutil.which('Rscript') or 'Rscript',str(Path(__file__).with_name('efa.R')),str(path/'efa_config.json'),str(path/'efa.json')],capture_output=True,timeout=250,check=True)
-            raw=json.loads((path/'efa.json').read_text(encoding='utf-8'))
+            raw=efa_run(x,q=settings.get('q'),seed=cfg.get('split',{}).get('seed',42),extraction=settings.get('extraction','pa'),rotation=settings.get('rotation','oblimin'))
+            if settings.get('automatic_factor_selection'):
+                from .factors import parallel_analysis
+                raw['parallel']=parallel_analysis(raw['correlation'],len(x),cfg.get('split',{}).get('seed',42))
+                raw['automatic_factor_selection']=settings['automatic_factor_selection']
         else:raw=cluster_run(x,cfg['method'],settings,cfg.get('split',{}).get('seed',42))
         raw['transform']=t
     bundle=build(run,raw,f)

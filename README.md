@@ -1,34 +1,24 @@
 # Multivariat Lab
 
-Aplikasi lokal untuk belajar, menghitung, dan mempresentasikan analisis multivariat. Backend Python dan R menyediakan hasil, frontend React menampilkan data, rumus, grafik, diagnostik, dan presentasi.
+Versi aktif menggunakan analisis otomatis dan presentasi yang dipilah dari laporan teknis. Contoh makalah berisi **18 slide utama**, dengan eksplorasi dan dokumentasi rinci sebagai lampiran yang tidak dipilih secara default. Bahasa antarmuka bersifat deskriptif. Memakai Python saja, termasuk EFA statsmodels; tidak memerlukan R. Pengujian: 70 tes backend dan 10 tes browser. Contoh serta PDF 18 halaman tercatat pada contracts/curated-demo.json. Bukti dan batas audit ada pada AUDIT_SISTEM.md.
+
+Aplikasi lokal untuk belajar, menghitung, dan mempresentasikan analisis multivariat. Backend Python menyediakan hasil, frontend React menampilkan data, rumus, grafik, diagnostik, dan presentasi.
 
 ## Buka aplikasi
 
-Frontend: http://127.0.0.1:5173
+Klik **Buka Multivariat Lab.cmd** di folder proyek. Launcher menjalankan server lokal dan membuka http://127.0.0.1:5173. Python dan seluruh mesin statistik sudah terpasang di komputer ini; **tidak memerlukan R**. API di http://127.0.0.1:8000/docs.
 
-Dokumentasi API: http://127.0.0.1:8000/docs
-
-Server keduanya sedang dijalankan pada akhir implementasi. Jika sudah berhenti, buka dua terminal dari folder proyek:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/start-backend.ps1
-```
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/start-frontend.ps1
-```
-
-Frontend membutuhkan Node.js, backend Python dan R. Untuk memasang ulang backend baca backend/README.md; frontend cukup `npm ci --prefix frontend`. Dependensi frontend berada langsung di `frontend/node_modules` pada drive C. Browser pengujian memakai lokasi standar Windows `%LOCALAPPDATA%/ms-playwright`. Sisa instalasi dan berkas sementara dari pemindahan terdahulu disimpan di `tmp/restored-runtime/`. Salinan lama `D:/MultivariatLab-runtime` masih ada sebagai cadangan karena pembersihan otomatis ditolak; aplikasi tidak bergantung padanya.
+Instalasi ulang: Python3.13, Node.js, `scripts/setup-backend.ps1`, dan `npm ci --prefix frontend`. Dependensi frontend berada di frontend/node_modules pada C. Tes browser memilih Chrome lokal bila tersedia; alternatifnya pasang Chromium Playwright. Browser Chrome/Edge juga dipakai eksportir grafik.
 
 ## Alur penggunaan
 
 1. Pilih **Buka contoh Taiwan** atau buat proyek dan unggah CSV/XLSX.
-2. Pilih sheet, format angka, dan peran kolom. Angka label dan teks label dibedakan.
-3. Buka **Hasil analisis** untuk melanjutkan draft contoh, atau **Rancang analisis** untuk membuat konfigurasi baru.
-4. Pilih tujuan, fitur, parameter, lalu tinjau dan jalankan. Hasil dan split tersimpan sebagai satu versi.
-5. Pada LDA, buka tab **Observasi**, cari `TW03598` untuk contoh makalah. Laboratorium keputusan menunjukkan pertukaran antara deteksi dan alarm keliru.
-6. Tambah dokumen pada **Dokumen** untuk mencari kutipan pendukung. AI opsional, statistik tetap dihitung lokal.
-7. Pilih **Presentasikan**, susun bagian dan catatan, lalu simpan snapshot. Snapshot yang pernah dibuka juga disimpan di IndexedDB browser sebagai fallback jika backend snapshot tidak tersedia.
+2. Tinjau data impor; untuk workbook, pilih sheet sumber. Pengaturan format angka berada di rincian opsional jika pembacaan tabel keliru.
+3. Buka **Analisis otomatis**, tekan **Lanjut**, lalu baca apa yang dikenali dan mengapa prosedurnya dipilih. Tidak perlu menentukan fitur, K, jumlah faktor, prior, seed, rotasi, atau split sendiri.
+4. Tekan **Analisis otomatis**. Sistem menghitung metode yang layak dan menjelaskan pertanyaan yang belum didukung data. Penjelasan kelayakan tetap dapat dipresentasikan; bukan hasil model atau angka rekaan.
+5. Dari **Hasil dan penjelasan**, pilih **Pilih isi presentasi**. Rincian hasil per metode tersedia jika ingin menelusuri lebih jauh.
+6. Tekan **Susun materi presentasi**. Materi utama terpilih secara default; hasil eksplorasi tambahan dan dokumentasi teknis menjadi lampiran opsional. Judul, urutan halaman, dan catatan pembicara tersedia di rincian.
+7. Simpan dan mulai presentasi. Rumus dirender dengan KaTeX pada layar dan notasi yang sama pada PDF. Snapshot yang pernah dibuka juga disimpan di IndexedDB browser sebagai fallback jika backend snapshot tidak tersedia.
 
 Mode presentasi menyembunyikan catatan sampai pengguna membukanya. Tombol panah dan keyboard kiri/kanan berpindah bagian, Esc keluar dari fullscreen browser. Internet tidak diperlukan setelah dependensi terpasang; frontend dan backend lokal tetap harus dijalankan untuk analisis baru.
 
@@ -52,4 +42,6 @@ Tes browser memerlukan Playwright Chromium dan server lokal aktif. Browser host 
 
 ## Batas produk
 
-Hasil diuji terhadap data contoh dan skenario regresi, bukan jaminan semua dataset bebas masalah. PCA, EFA, clustering, dan LDA menjawab pertanyaan berbeda. Model Taiwan tidak langsung cocok untuk rasio mentah perusahaan baru. AI belum diuji dengan API key pengguna; pengiriman kutipan membutuhkan pilihan eksplisit. PDF mengikuti bagian dan urutan presentasi tersimpan; tampilannya bukan salinan persis slide browser. Hasil audit terakhir: 40 tes backend dan 8 tes browser lulus. Batas backend rinci ada pada backend/README.md. Tidak ada klaim validasi SPSS atau penerapan aktuaria operasional.
+Hasil diuji terhadap data contoh dan skenario regresi, bukan jaminan semua dataset bebas masalah. Otomatisasi mengatur prosedur, bukan menebak makna semua kolom atau memaksa setiap metode menghasilkan model. Hierarki di atas 1.000 baris menggunakan sampel tetap yang dinyatakan di laporan; pohon itu bukan hierarki seluruh data. PCA, EFA, clustering, dan LDA menjawab pertanyaan berbeda. Model Taiwan tidak langsung cocok untuk rasio mentah perusahaan baru. AI opsional belum diuji dengan API key pengguna. PDF mengikuti bagian dan urutan presentasi tersimpan; tampilannya bukan salinan persis slide browser. Batas backend rinci ada pada backend/README.md. Tidak ada klaim validasi SPSS atau penerapan aktuaria operasional.
+
+Laporan presentasi diperluas menjadi pembahasan lengkap yang dapat dibaca langsung. Contoh terbaru ada di contracts/multi-analysis-demo.json. EFA kini memakai statsmodels Python dan dapat dijalankan bersama empat metode lain tanpa R.

@@ -1,0 +1,39 @@
+{
+  "project_id": "19bee95e-3d1a-43a3-8bf0-883fb9b9af28",
+  "suite_id": "6f927165-11db-4841-9cc1-639e9bfb59ce",
+  "run_ids": [
+    "7c3acf35-ef1d-4374-9dcd-e5cad19610ac",
+    "9314ce8c-f8fc-4ba6-bad1-4a0d9154ffcc",
+    "5aa39c64-f351-4b4c-86ef-058db64c779d",
+    "d51ef16d-e3a4-4ac0-9f85-39ab7f309d23",
+    "830faf37-1e0e-44fc-9bef-6882c32b9ac1"
+  ],
+  "plan_id": "0c9a9916-9106-4849-ba38-ee25f10d94fb",
+  "snapshot_id": "87a7d90b-9188-478b-ba0c-5d0ba3f50e0f",
+  "core_count": 18,
+  "optional_count": 148,
+  "pdf_job_id": "acdea679-5ed9-4c09-9b60-76320e2e7d32",
+  "url": "http://127.0.0.1:5173/present/87a7d90b-9188-478b-ba0c-5d0ba3f50e0f",
+  "editor_url": "http://127.0.0.1:5173/p/19bee95e-3d1a-43a3-8bf0-883fb9b9af28/presentation?suite=6f927165-11db-4841-9cc1-639e9bfb59ce&runs=7c3acf35-ef1d-4374-9dcd-e5cad19610ac,9314ce8c-f8fc-4ba6-bad1-4a0d9154ffcc,5aa39c64-f351-4b4c-86ef-058db64c779d,d51ef16d-e3a4-4ac0-9f85-39ab7f309d23,830faf37-1e0e-44fc-9bef-6882c32b9ac1",
+  "outline": [
+    "Analisis multivariat dalam aktuaria",
+    "Empat pendekatan dengan tujuan berbeda",
+    "Dasar matematis metode",
+    "Data dan komposisi observasi",
+    "Indikator analisis",
+    "Rancangan pengolahan dan evaluasi",
+    "Fungsi diskriminan dan keputusan kelas",
+    "Hasil klasifikasi pada data test",
+    "Akurasi dan kemampuan mendeteksi kasus positif",
+    "Kemampuan pemeringkatan dan kurva precision–recall",
+    "Sensitivitas keputusan terhadap ambang dan prior",
+    "Diagnostik dan asumsi diskriminan",
+    "Konsistensi terhadap makalah dan sumber",
+    "PCA sebagai ringkasan variasi · ilustrasi",
+    "Spektrum variasi komponen utama",
+    "Relevansi pada penelaahan risiko aktuaria",
+    "Keterbatasan dan cakupan kesimpulan",
+    "Kesimpulan"
+  ],
+  "pdf_artifact_id": "c2945792-a5a1-4884-b8dc-7b9191f8ecd5"
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "run_id": "eaa36a0d-9313-4b38-8508-958aacf33bb5",
+  "run_id": "722467ea-8bbc-40f5-8d60-6ef51ecd74bb",
   "method": "lda",
   "subset_definitions": {
     "train": {
@@ -1433,7 +1433,7 @@
       ],
       "severity": "info",
       "origin": "deterministic",
-      "run_id": "eaa36a0d-9313-4b38-8508-958aacf33bb5"
+      "run_id": "722467ea-8bbc-40f5-8d60-6ef51ecd74bb"
     }
   ],
   "visual_manifest": [
@@ -1445,7 +1445,7 @@
       "status": "shown",
       "reason_code": "ELIGIBLE",
       "reason_text": "Jumlah kasus; baris aktual dan kolom prediksi. Persentase dibaca per baris aktual.",
-      "data_ref": "/api/v1/runs/eaa36a0d-9313-4b38-8508-958aacf33bb5/visuals/confusion_matrix",
+      "data_ref": "/api/v1/runs/722467ea-8bbc-40f5-8d60-6ef51ecd74bb/visuals/confusion_matrix",
       "subset_id": "test",
       "axes": {},
       "series": [],
@@ -1466,7 +1466,7 @@
       "status": "available",
       "reason_code": "ELIGIBLE",
       "reason_text": "Sensitivity terhadap false positive rate; ringkasan pemeringkatan, bukan kalibrasi probabilitas.",
-      "data_ref": "/api/v1/runs/eaa36a0d-9313-4b38-8508-958aacf33bb5/visuals/roc",
+      "data_ref": "/api/v1/runs/722467ea-8bbc-40f5-8d60-6ef51ecd74bb/visuals/roc",
       "subset_id": "test",
       "axes": {},
       "series": [],
@@ -1487,7 +1487,7 @@
       "status": "shown",
       "reason_code": "ELIGIBLE",
       "reason_text": "Recall adalah bagian kasus positif yang ditemukan; precision adalah bagian sinyal yang benar. Garis bertangga mengikuti definisi average precision.",
-      "data_ref": "/api/v1/runs/eaa36a0d-9313-4b38-8508-958aacf33bb5/visuals/precision_recall",
+      "data_ref": "/api/v1/runs/722467ea-8bbc-40f5-8d60-6ef51ecd74bb/visuals/precision_recall",
       "subset_id": "test",
       "axes": {},
       "series": [],
@@ -1503,14 +1503,15 @@
   ],
   "provenance": {
     "source_sha256": "6914ecc15b1c329b828afb6c4d15fe579a718503cfded2e39603d6e2cfb38943",
-    "dataset_version_id": "9afe6bd8-a544-4164-98e7-8927070d9e06",
-    "config_hash": "9017d87da24e54867b6c315fa11d52ee80a18713d1617534856d1f96df6f2d99",
+    "dataset_version_id": "563b73b1-f48a-40d3-8cf2-4cdb434d5fea",
+    "config_hash": "d267ad7c0ff9ad64e597b3fb41889d2a0bcc02b6d8a7565f5da2df5c7ab05b82",
     "engine_versions": {
       "numpy": "2.5.4",
       "scipy": "1.18.1",
       "pandas": "3.1.1",
       "scikit-learn": "1.9.1",
-      "fastapi": "0.162.0"
+      "fastapi": "0.162.0",
+      "statsmodels": "0.15.0"
     },
     "visual_policy_version": "1.0.0",
     "feature_labels": [
@@ -1527,6 +1528,8 @@
       "c5",
       "c6"
     ],
+    "source_row_count": 6819,
+    "automatic_decisions": [],
     "target_label": "bankrupt",
     "positive_label": 1,
     "negative_label": 0,

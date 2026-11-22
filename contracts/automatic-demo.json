@@ -1,0 +1,51 @@
+{
+  "project_id": "71170734-b243-4a02-b343-92ba8419a2a8",
+  "dataset_id": "34afc132-cb96-4713-9844-6950814268ce",
+  "plan_id": "920e9177-16d3-42dc-a2fb-e4d5bda058c9",
+  "suite_id": "2ce96a4e-6016-41af-b80d-14a297e37c48",
+  "run_ids": [
+    "8a9d63b1-6cbc-4e37-8019-7a46713faef4",
+    "5319edfa-af0a-4d01-96da-e0a254ce4488",
+    "3ce861f4-f30f-4790-92a8-c5f82c963e24",
+    "bb1093b4-86b9-4c6c-a3e3-07d48dcdc9bd",
+    "ac27df4a-3a69-4266-8b08-c675ef1df3f6"
+  ],
+  "snapshot_id": "effbb8ab-a013-4650-8350-623595bd611d",
+  "sections": 141,
+  "pdf_job_id": "f966ea4c-d768-420b-bc7b-301200d2c8cc",
+  "analyses": [
+    {
+      "method": "pca",
+      "status": "succeeded",
+      "run_id": "8a9d63b1-6cbc-4e37-8019-7a46713faef4",
+      "explanation": "Sistem merangkum variasi indikator menjadi komponen yang lebih sedikit."
+    },
+    {
+      "method": "efa",
+      "status": "succeeded",
+      "run_id": "5319edfa-af0a-4d01-96da-e0a254ce4488",
+      "explanation": "Sistem mengeksplorasi pola faktor bersama dengan pemeriksaan kelayakan terlebih dahulu."
+    },
+    {
+      "method": "kmeans",
+      "status": "succeeded",
+      "run_id": "3ce861f4-f30f-4790-92a8-c5f82c963e24",
+      "explanation": "Sistem mencari kemiripan profil dan menjelaskan ciri setiap kelompok."
+    },
+    {
+      "method": "hierarchical",
+      "status": "succeeded",
+      "run_id": "bb1093b4-86b9-4c6c-a3e3-07d48dcdc9bd",
+      "explanation": "Sistem mencari kemiripan profil dan menjelaskan ciri setiap kelompok."
+    },
+    {
+      "method": "lda",
+      "status": "succeeded",
+      "run_id": "ac27df4a-3a69-4266-8b08-c675ef1df3f6",
+      "explanation": "Sistem mempelajari dua kelas pada data pelatihan, lalu mengevaluasinya pada data yang dipisahkan."
+    }
+  ],
+  "url": "http://127.0.0.1:5173/present/effbb8ab-a013-4650-8350-623595bd611d",
+  "editor_url": "http://127.0.0.1:5173/p/71170734-b243-4a02-b343-92ba8419a2a8/presentation?suite=2ce96a4e-6016-41af-b80d-14a297e37c48&runs=8a9d63b1-6cbc-4e37-8019-7a46713faef4,5319edfa-af0a-4d01-96da-e0a254ce4488,3ce861f4-f30f-4790-92a8-c5f82c963e24,bb1093b4-86b9-4c6c-a3e3-07d48dcdc9bd,ac27df4a-3a69-4266-8b08-c675ef1df3f6",
+  "pdf_artifact_id": "f8972350-d7de-400a-8844-4c1f42982183"
+}

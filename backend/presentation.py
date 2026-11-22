@@ -17,6 +17,11 @@ def sections_for_run(run,bundle,raw,frame):
             'Nama dan urutan indikator berikut menentukan makna matriks, skor, dan visual.',
             'Contoh Taiwan memakai skala kurasi dataset; nilai 0,8 tidak otomatis berarti rasio laporan 80%.' if 'makalah' in cfg.get('purpose','').lower() else 'Satuan dan parameter transformasi harus dibaca bersama hasil.'],
             [dict(indikator=name,pengolahan=cfg.get('preprocessing',{}).get('scale','standard' if method in ('kmeans','hierarchical') else 'none')) for name in names[start:start+8]],['indikator','pengolahan'])
+    if result['provenance'].get('automatic_decisions'):
+        content('automatic_procedure','Mengapa sistem memilih prosedur ini?',result['provenance']['automatic_decisions'])
+    if result['provenance'].get('sampling'):
+        sample=result['provenance']['sampling']
+        content('sample_scope','Cakupan contoh pada pohon kelompok',[f"Pohon memakai {sample['used_n']} dari {sample['population_n']} rekaman melalui sampel acak tetap. Pemilihan ini menjaga perhitungan dan tampilan tetap terbaca; pohon bukan hasil hierarkis seluruh populasi.",'Identitas semua rekaman yang benar-benar dipakai tersimpan. Kelompok dari contoh tidak otomatis memberikan keanggotaan untuk rekaman di luar contoh.'])
     if method=='lda':
         m=raw['model'];ev=raw['evaluations']['test'];train=np.array(raw['train']);test=np.array(raw['test']);y=np.array(raw['y'])
         content('procedure','Bagaimana model dan evaluasinya dipisahkan?',[
@@ -46,8 +51,11 @@ def sections_for_run(run,bundle,raw,frame):
         content('formula','Bagaimana metode mengubah data menjadi hasil?',explanations[method],formula=formula)
         content('summary','Apa yang dirangkum oleh metode ini?', [result['narrative_blocks'][0]['text']],
             [dict(ukuran=m['label'],nilai=m['value']) for m in result['metrics']],['ukuran','nilai'])
+    from .report_detail import detailed_sections
+    detailed_sections(content,run,bundle,raw,frame)
     for visual in result['visual_manifest']:
-        if visual['status']=='shown':out.append(dict(id=rid+'_'+visual['id'],run_id=rid,kind='visual',visual_id=visual['id'],title=visual['title'],enabled=True))
+        dense_factor=visual['kind']=='heatmap' and (len(names)>8 or raw.get('q',0)>6)
+        if visual['status']=='shown' and not dense_factor:out.append(dict(id=rid+'_'+visual['id'],run_id=rid,kind='visual',visual_id=visual['id'],title=visual['title'],enabled=True))
     if method=='lda':
         compare=[]
         for key,name in [('test','Ambang utama'),('test_OOF_threshold','Ambang dari OOF train'),('test_equal_prior','Prior sama')]:
@@ -66,4 +74,47 @@ def sections_for_run(run,bundle,raw,frame):
         *[d['explanation'] for d in result['diagnostics']][:2],
         'Pola statistik pada sampel ini bukan hubungan sebab-akibat. Validasi di populasi baru memerlukan definisi variabel dan desain yang sesuai.',
         'Kasus Taiwan membantu pembelajaran penelaahan risiko investasi; hasil ini belum memvalidasi premi, cadangan, atau modal asuransi.' if 'makalah' in cfg.get('purpose','').lower() else 'Simpan konfigurasi, sumber dan hasil agar keputusan dapat ditelusuri ulang.'])
-    return clean(out)
+    # Read in the order question -> data -> method -> detailed evidence -> evaluation -> limits.
+    def priority(section):
+        suffix=section['id'].removeprefix(rid+'_')
+        if suffix=='research':return 0
+        if suffix=='data_context':return 1
+        if suffix.startswith('variables'):return 2
+        if suffix.startswith(('processing_','descriptive')):return 3
+        if suffix in ('procedure','formula','lda_split_design'):return 4
+        if suffix.startswith(('lda_means','lda_covariance','lda_coefficients','pca_','efa_','cluster_')):return 5
+        if suffix.startswith('example'):return 6
+        if section['kind']=='visual':return 7
+        if suffix=='summary' or suffix.startswith(('metric_','lda_decoding','lda_assumptions')):return 8
+        if suffix in ('decisions','lda_oof_explanation','reproduction'):return 9
+        if suffix=='limitations':return 10
+        if suffix=='conclusion':return 11
+        return 8
+    out.sort(key=priority)
+    # Split reports into readable sections without removing any text or table rows.
+    import textwrap
+    paginated=[]
+    for section in out:
+        if section['kind']!='content':paginated.append(section);continue
+        from .mathematics import math_prose,METRICS
+        paragraphs=[math_prose(p) for p in section.get('paragraphs',[])]
+        metric_key=section['id'].removeprefix(rid+'_metric_')
+        if metric_key in METRICS:section.update(formula=METRICS[metric_key],formula_text=metric_key+' (lihat notasi matematika)')
+        if section['id'].endswith('_summary'):
+            paragraphs=paragraphs+['Ringkasan ini dibaca bersama bagian prosedur, parameter, tabel lengkap, dan pembahasan setelahnya. Ukuran yang dihasilkan mengikuti tujuan metode: varians untuk PCA, kelayakan faktor untuk EFA, kemiripan untuk gerombol, serta kesalahan klasifikasi pada test untuk LDA. Nilai dari metode yang berbeda tidak mempunyai arti atau skala keberhasilan yang sama.']
+        rows=section.get('rows',[]);budget=700 if rows else 1050 if section.get('formula') else 1200
+        groups=[];current=[];length=0
+        for paragraph in paragraphs:
+            for part in textwrap.wrap(paragraph,width=budget,break_long_words=False,break_on_hyphens=False) or ['']:
+                if current and length+len(part)>budget:groups.append(current);current=[];length=0
+                current.append(part);length+=len(part)
+        if current:groups.append(current)
+        if not groups:groups=[[]]
+        # Narrative before a table may take several pages. The table stays on the last narrative page.
+        pieces=[dict(section,paragraphs=g,rows=[]) for g in groups[:-1]]
+        chunks=[rows[i:i+4] for i in range(0,len(rows),4)] or [[]]
+        pieces.extend(dict(section,paragraphs=groups[-1],rows=chunk) for chunk in chunks)
+        for i,piece in enumerate(pieces):
+            if i:piece.update(id=section['id']+f'__part_{i+1}',title=section['title']+f' · lanjutan {i+1}',formula=None,formula_text=None)
+            paginated.append(piece)
+    return clean(paginated)

@@ -6,7 +6,7 @@
 web
 
 ## Stack
-Delegated and accepted: React TypeScript Vite frontend; Python FastAPI backend with R EFA worker. Local-first browser application.
+Delegated and accepted: React TypeScript Vite frontend; Python FastAPI backend with statsmodels EFA (no R runtime). Local-first browser application.
 
 ## Users and purpose
 Students learning multivariate analysis and presenting to lecturers. Users upload numerical tables, choose an analytical question, inspect reproducible calculations and assumptions, and present actual results. User has approved briefs/FRONTEND.md and briefs/BACKEND.md and authorized implementation without another direction workshop.

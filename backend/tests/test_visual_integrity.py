@@ -100,14 +100,10 @@ def test_liquidity_names_are_not_misclassified_as_identifiers():
     assert dataframe(d).c0.tolist()==['001','002','003']
 
 def test_parallel_analysis_plots_the_same_quantile_used_for_retention(tmp_path):
-    import subprocess
+    from backend.factors import efa_run
     rng=np.random.default_rng(9);factors=rng.normal(size=(350,2));L=np.array([[.8,.1],[.7,.1],[.9,.1],[.1,.8],[.1,.7],[.1,.9]])
     X=factors@L.T+rng.normal(size=(350,6))*.3
-    pd.DataFrame(X).to_csv(tmp_path/'data.csv',index=False)
-    db.write_json(tmp_path/'cfg.json',dict(data=str(tmp_path/'data.csv'),q=None,seed=42,extraction='pa',rotation='oblimin'))
-    r=subprocess.run(['Rscript',str(db.ROOT/'backend/efa.R'),str(tmp_path/'cfg.json'),str(tmp_path/'out.json')],capture_output=True,timeout=120)
-    assert r.returncode==0,r.stderr.decode(errors='replace')
-    out=json.loads((tmp_path/'out.json').read_text());pa=out['parallel'];observed=np.array(pa['observed']);boundary=np.array(pa['simulated']);mean=np.array(pa['simulation_mean'])
+    out=efa_run(X);pa=out['parallel'];observed=np.array(pa['observed']);boundary=np.array(pa['simulated']);mean=np.array(pa['simulation_mean'])
     assert len(boundary)==6 and np.all(boundary>=mean-1e-10)
     not_greater=np.flatnonzero(observed<=boundary);retained=int(not_greater[0]) if len(not_greater) else 6
     assert retained==pa['recommended']==out['q']==2

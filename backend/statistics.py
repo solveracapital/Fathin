@@ -110,6 +110,15 @@ def predict(model,X):
     return expit(eta),eta
 
 
+def time_values(source,config):
+    import pandas as pd
+    if config.get('time_format')=='year':
+        years=pd.to_numeric(source,errors='raise')
+        if years.isna().any() or (years%1!=0).any():raise ValueError('Tahun harus bilangan bulat dan tidak kosong.')
+        return pd.to_datetime(years.astype('int64').astype(str),format='%Y',errors='raise',utc=True)
+    # Numeric dates are not silently interpreted as nanoseconds since 1970.
+    return pd.to_datetime(source.astype(str) if pd.api.types.is_numeric_dtype(source) else source,errors='raise',utc=True)
+
 def split_indices(frame,y,config):
     mode=config.get('mode','stratified_random'); ids=np.arange(len(y)); seed=config.get('seed',42)
     if mode=='saved_membership':
@@ -127,7 +136,7 @@ def split_indices(frame,y,config):
         return next(GroupShuffleSplit(n_splits=1,test_size=config.get('test_size',.3),random_state=seed).split(ids,y,groups))
     if mode=='temporal':
         import pandas as pd
-        times=pd.to_datetime(frame[config['column_id']],errors='raise',utc=True)
+        times=time_values(frame[config['column_id']],config)
         if times.isna().any():raise ValueError('Waktu kosong tidak boleh diabaikan diam-diam.')
         cut=pd.Timestamp(config['cutoff']); cut=cut.tz_localize('UTC') if cut.tzinfo is None else cut
         gap=pd.Timedelta(days=config.get('gap_days',0))
@@ -161,7 +170,7 @@ def lda_run(frame,features,target,positive,options,split,settings):
             partitions=StratifiedGroupKFold(folds,shuffle=True,random_state=split.get('seed',42)).split(X[train],y[train],groups)
         elif mode=='temporal':
             import pandas as pd
-            times=pd.to_datetime(frame.iloc[train][split['column_id']],utc=True)
+            times=time_values(frame.iloc[train][split['column_id']],split)
             unique=np.sort(times.unique())
             if len(unique)<=folds:raise ValueError('Waktu unik tidak cukup untuk OOF temporal.')
             partitions=[]

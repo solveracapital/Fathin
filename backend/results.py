@@ -7,6 +7,7 @@ def build(run,raw,frame):
     labels=run['provenance'].get('feature_labels',features)
     titles={'confusion_matrix':'Kasus yang terdeteksi dan terlewat','precision_recall':'Ketepatan sinyal dan cakupan deteksi','roc':'Kurva ROC','scree':'Variasi setiap komponen','scores':'Proyeksi observasi pada PC1 dan PC2','profiles':'Pusat indikator menurut kelompok','dendrogram':'Urutan penggabungan kelompok','loadings':'Pola loading faktor','parallel_analysis':'Faktor teramati dan data acak'}
     default_subset='train' if method=='pca' and run['config'].get('settings',{}).get('subset')=='train' else 'all'
+    if run['config'].get('settings',{}).get('sample_row_ids'):default_subset='sample'
     tables={}; visuals={}; manifest=[]; metrics=[]; diagnostics=[]
     def table(id,rows,subset='all'):
         if subset=='all':subset=default_subset
@@ -62,18 +63,18 @@ def build(run,raw,frame):
             visual('scores','scatter',[dict(x=raw['scores'][i,0],y=raw['scores'][i,1],row_id=str(frame.iloc[i]['_row_id'])) for i in indices],status='available',projection=dict(basis='PCA',dimensions=[1,2],explained_variance=raw['PVE'][:2],scaling_convention='scores'))
             manifest[-1]['sampling']=dict(population_n=len(frame),displayed_n=len(indices),seed=None,strategy='evenly_spaced_source_order')
         metrics=[dict(id='PVE_selected',label='Varians terjelaskan',value=float(raw['cumulative'][raw['selected_q']-1]),unit='ratio',status='ok',reason=None,subset_id=default_subset,evidence_ids=['components'])]
-        text=f"{raw['selected_q']} komponen dipilih untuk ringkasan variasi. PCA tidak mengukur akurasi klasifikasi."
+        text=f"{raw['selected_q']} komponen merangkum {100*raw['cumulative'][raw['selected_q']-1]:.2f}% variasi pada subset analisis. Persentase variasi ini tidak mengukur akurasi klasifikasi."
     elif method in ('kmeans','hierarchical'):
         rows=[dict(cluster=i,count=int(raw['counts'][i]),centroid=raw['centroids'][i]) for i in range(len(raw['counts']))]
-        table('clusters',[{**r,'cluster':r['cluster']+1} for r in rows]);visual('profiles','bar',rows)
+        table('clusters',[{**r,'cluster':r['cluster']+1} for r in rows]);visual('profiles','bar',rows,status='shown' if len(features)<=8 and len(rows)<=12 else 'available',reason='Pusat kelompok pada skala pengolahan; banyak indikator/kelompok, sehingga gunakan tabel profil lengkap sebelum mengaktifkan grafik padat.' if len(features)>8 or len(rows)>12 else 'Sesuai tujuan dan hasil analisis.')
         from .statistics import metric
-        metrics=[metric('silhouette',raw['silhouette'],'all')]
+        metrics=[metric('silhouette',raw['silhouette'],default_subset)]
         metrics[0]['label']='Silhouette (−1 sampai 1)'
         table('cluster_diagnostics',[dict(parameter=k,value=raw.get(k)) for k in ('inertia','iterations','silhouette','silhouette_sample_n','seed')])
         if raw.get('iterations') is not None and raw['iterations']>=300:diagnostics.append(dict(code='ITERATION_LIMIT',severity='warning',title='Batas iterasi tercapai',explanation='K-means mencapai batas 300 iterasi; tinjau stabilitas solusi sebelum interpretasi.',evidence_ids=['cluster_diagnostics']))
         table('membership',[dict(row_id=str(frame.iloc[i]['_row_id']),cluster=int(v)+1) for i,v in enumerate(raw['labels'])])
         if raw['tree'] is not None:visual('dendrogram','dendrogram',dict(linkage=raw['tree'],truncate_last=30,convention='Euclidean Ward variance' if run['config']['settings'].get('linkage','ward')=='ward' else run['config']['settings'].get('linkage')))
-        text='Kelompok menggambarkan kemiripan fitur; nomor kelompok bukan urutan risiko.'
+        text=f"{len(raw['counts'])} kelompok terbentuk dari {len(frame)} rekaman yang dianalisis. Kelompok menggambarkan kemiripan fitur; nomor kelompok bukan urutan risiko."
     else:
         table('factor_loadings',[dict(feature=f,label=labels[i],pattern=raw['pattern'][i],structure=raw['structure'][i],communality=raw['communalities'][i],uniqueness=raw['uniqueness'][i]) for i,f in enumerate(features)])
         visual('loadings','heatmap',tables['factor_loadings']['rows'])
@@ -83,7 +84,7 @@ def build(run,raw,frame):
         table('factor_diagnostics',[dict(parameter=k,value=raw[k]) for k in ('Phi','residual','msa','bartlett','warnings','versions')])
         if raw.get('scores') is not None:table('factor_scores',[dict(row_id=str(frame.iloc[i]['_row_id']),values=row) for i,row in enumerate(raw['scores'])])
         if raw.get('parallel'):visual('parallel_analysis','line',raw['parallel'])
-        text='Faktor bersifat eksploratori; nama konstruk memerlukan alasan substantif.'
+        text=f"{raw['q']} faktor digunakan untuk mengeksplorasi hubungan indikator. Faktor bersifat eksploratori; nama konstruk memerlukan alasan substantif."
     for d in diagnostics:d.update(affected_column_ids=[],suggested_actions=['Tinjau batas interpretasi.'])
     table('preprocessing',[dict(parameter=k,value=v) for k,v in raw.get('transform',{}).items()],'train' if method=='lda' else default_subset)
     definitions={k:dict(n=len(raw[k])) for k in ('train','test','excluded') if k in raw}
